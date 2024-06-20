@@ -69,10 +69,15 @@ namespace MilkShopData.Base
             _dbSet.Add(entity);
             _context.SaveChanges();
         }
+        public async Task<int> AddCategoryAsync(Category category)
+        {
+            await _context.Categories.AddAsync(category);
+            return await _context.SaveChangesAsync();
+        }
 
         public async Task<int> CreateAsync(T entity)
         {
-            _dbSet.Add(entity);
+            await _dbSet.AddAsync(entity);
             return await _context.SaveChangesAsync();
         }
 

@@ -28,7 +28,7 @@ namespace MilkShop.WpfApp.UI
             {
                 if (int.TryParse(txtCategoryId.Text, out int id))
                 {
-                    var item = await _business.GetByID(id);
+                    var item = await _business.GetById(id);
 
                     if (item.Data == null)
                     {
@@ -86,7 +86,7 @@ namespace MilkShop.WpfApp.UI
                     var item = row.Item as Category;
                     if (item != null)
                     {
-                        var currencyResult = await _business.GetByID(item.CategoryId);
+                        var currencyResult = await _business.GetById(item.CategoryId);
 
                         if (currencyResult.Status > 0 && currencyResult.Data != null)
                         {
