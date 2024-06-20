@@ -94,18 +94,19 @@ namespace MilkShopBusiness.Base
 
         public async Task<IMilkShopResult> Save(Category category)
         {
+            int result = await _unitOfWork.CategoryRepository.AddCategoryAsync(category);
+            if (result > 0)
+            {
+                return new MilkShopResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+            }
+            else
+            {
+                return new MilkShopResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+            }
             try
             {
                 //int result = await _DiscountRepository.CreateAsync(Discount);
-                int result = await _unitOfWork.CategoryRepository.CreateAsync(category);
-                if (result > 0)
-                {
-                    return new MilkShopResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
-                }
-                else
-                {
-                    return new MilkShopResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
-                }
+               
             }
             catch (Exception ex)
             {
