@@ -41,7 +41,7 @@ namespace MilkShopBusiness.Base
 
                 //var currencies = _DAO.GetAll();
                 //var currencies = await _CategoryRepository.GetAllAsync();
-                var currencies = await _unitOfWork.CategoryRepository.GetAllAsync();
+                var currencies = await _unitOfWork.CategoryRepository.GetAllCategory();
 
 
                 if (currencies == null)
@@ -143,8 +143,8 @@ namespace MilkShopBusiness.Base
             if (Category != null)
             {
                 //var result = await _CategoryRepository.RemoveAsync(Category);
-                var result = await _unitOfWork.CategoryRepository.RemoveAsync(Category);
-                if (result)
+                var result = await _unitOfWork.CategoryRepository.RemoveCategoryAsync(Category);
+                if (result>0)
                 {
                     return new MilkShopResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
                 }
