@@ -30,8 +30,10 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
     public virtual DbSet<Product> Products { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("data source=LAPTOP-881Q2J1T;initial catalog=NET1702_PRN221_MilkShop;user id=sa;password=12345;Integrated Security=True;TrustServerCertificate=True");
-        base.OnConfiguring(optionsBuilder);
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer("Server=LAPTOP-881Q2J1T;Database=NET1702_PRN221_MilkShop;User Id=sa;Password=12345;Integrated Security=True;TrustServerCertificate=True");
+        }
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -40,9 +42,16 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
             entity.HasKey(e => e.CategoryId).HasName("Category_pk");
 
             entity.ToTable("Category");
-
             entity.Property(e => e.CategoryName).HasMaxLength(250);
             entity.Property(e => e.Type).HasMaxLength(250);
+            entity.Property(e => e.Description).HasColumnType("text");
+            entity.Property(e => e.ParentCategoryID).HasColumnName("ParentCategoryId");
+            entity.Property(e => e.ImageURL).HasMaxLength(255).HasColumnName("ImageURL");
+            entity.Property(e => e.MetaKeywords).HasMaxLength(255);
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+            entity.Property(e => e.Status).HasColumnType("tinyint");
+            entity.Property(e => e.SortOrder).HasColumnType("int");
         });
 
         modelBuilder.Entity<Customer>(entity =>

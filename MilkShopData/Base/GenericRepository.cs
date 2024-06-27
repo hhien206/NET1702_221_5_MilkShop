@@ -64,6 +64,11 @@ namespace MilkShopData.Base
         {
             return await _dbSet.ToListAsync();
         }
+        public async Task<List<Category>> GetAllCategory()
+        {
+            var list = await _context.Categories.ToListAsync();
+            return list;
+        }
         public void Create(T entity)
         {
             _dbSet.Add(entity);
@@ -101,7 +106,11 @@ namespace MilkShopData.Base
             _context.SaveChanges();
             return true;
         }
-
+        public async Task<int> RemoveCategoryAsync(Category category)
+        {
+            _context.Categories.Remove(category);
+            return await _context.SaveChangesAsync();
+        }
         public async Task<bool> RemoveAsync(T entity)
         {
             _dbSet.Remove(entity);
