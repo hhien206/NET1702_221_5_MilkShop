@@ -2,7 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MilkShopData.Models;
 
@@ -35,6 +37,22 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
             optionsBuilder.UseSqlServer("Server=LAPTOP-881Q2J1T;Database=NET1702_PRN221_MilkShop;User Id=sa;Password=12345;Integrated Security=True;TrustServerCertificate=True");
         }
     }
+    protected override void ConfigureConventions(ModelConfigurationBuilder builder)
+    {
+        builder.Properties<DateOnly>()
+               .HaveConversion<DateOnlyConverter>()
+               .HaveColumnType("date");
+    }
+    public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>
+    {
+        /// <summary>
+        /// Creates a new instance of this converter.
+        /// </summary>
+        public DateOnlyConverter() : base(
+            d => d.ToDateTime(TimeOnly.MinValue),
+            d => DateOnly.FromDateTime(d))
+        { }
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
@@ -47,11 +65,11 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
             entity.Property(e => e.Description).HasColumnType("text");
             entity.Property(e => e.ParentCategoryID).HasColumnName("ParentCategoryId");
             entity.Property(e => e.ImageURL).HasMaxLength(255).HasColumnName("ImageURL");
-            entity.Property(e => e.MetaKeywords).HasMaxLength(255);
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+            entity.Property(e => e.MetaKeywords).HasMaxLength(255);       
             entity.Property(e => e.Status).HasColumnType("tinyint");
             entity.Property(e => e.SortOrder).HasColumnType("int");
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<Customer>(entity =>
