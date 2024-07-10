@@ -9,7 +9,7 @@ public partial class Discount
 {
     public int DiscountId { get; set; }
 
-    public int? ProductId { get; set; }
+    //public int? ProductId { get; set; }
 
     public double? DiscountPercent { get; set; }
 
