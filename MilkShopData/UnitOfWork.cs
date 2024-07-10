@@ -7,6 +7,7 @@ namespace MilkShopData
     {
         private NET1702_PRN221_MilkShopContext _context;
         private CategoryRepository _category;
+        private CustomerRepository _customer;
         public UnitOfWork()
         {
             _context ??= new NET1702_PRN221_MilkShopContext();
@@ -17,6 +18,14 @@ namespace MilkShopData
             get
             {
                 return _category ??= new CategoryRepository(_context);
+            }
+        }
+
+        public CustomerRepository CustomerRepository
+        {
+            get
+            {
+                return _customer ??=  new CustomerRepository(_context);
             }
         }
     }

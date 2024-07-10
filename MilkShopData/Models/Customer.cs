@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MilkShopData.Models;
 
@@ -18,8 +19,8 @@ public partial class Customer
     public string Address { get; set; }
 
     public string PhoneNumber { get; set; }
-
-    public DateTime? Dob { get; set; }
+    
+    public DateOnly? Dob { get; set; }
 
     public bool? Gender { get; set; }
 

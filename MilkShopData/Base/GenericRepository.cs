@@ -75,6 +75,20 @@ namespace MilkShopData.Base
             return await _context.SaveChangesAsync();
         }
 
+        public async Task<int> AddCustomerAsync(Customer customer)
+        {
+            await _context.Customers.AddAsync(customer);
+            return await _context.SaveChangesAsync();
+        }
+
+        
+        public async Task<int> UpdateCustomerAsync(Customer customer)
+        {
+            var tracker = _context.Update(customer);
+            tracker.State = EntityState.Modified;
+            return await _context.SaveChangesAsync();
+        }
+
         public async Task<int> CreateAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
@@ -84,7 +98,8 @@ namespace MilkShopData.Base
         public void Update(T entity)
         {
             var tracker = _context.Attach(entity);
-            tracker.State = EntityState.Modified;
+            //tracker.State = EntityState.Modified;
+            _context.Entry(entity).State = EntityState.Modified;
             _context.SaveChanges();
         }
 

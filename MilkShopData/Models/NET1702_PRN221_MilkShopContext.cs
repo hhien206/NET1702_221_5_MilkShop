@@ -2,7 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MilkShopData.Models;
 
@@ -17,6 +19,8 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
     {
     }
 
+
+
     public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<Customer> Customers { get; set; }
@@ -30,8 +34,26 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
     public virtual DbSet<Product> Products { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("data source=LAPTOP-881Q2J1T;initial catalog=NET1702_PRN221_MilkShop;user id=sa;password=12345;Integrated Security=True;TrustServerCertificate=True");
+        optionsBuilder.UseSqlServer("data source=w4v3\\SQL2019;initial catalog=NET1702_PRN221_MilkShop;user id=sa;password=12345;Integrated Security=True;TrustServerCertificate=True");
         base.OnConfiguring(optionsBuilder);
+    }
+
+    public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>
+    {
+        /// <summary>
+        /// Creates a new instance of this converter.
+        /// </summary>
+        public DateOnlyConverter() : base(
+            d => d.ToDateTime(TimeOnly.MinValue),
+            d => DateOnly.FromDateTime(d))
+        { }
+    }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder builder)
+    {
+        builder.Properties<DateOnly>()
+               .HaveConversion<DateOnlyConverter>()
+               .HaveColumnType("date");
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -51,17 +73,15 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
 
             entity.ToTable("Customer");
 
-            entity.Property(e => e.AccountId).HasColumnName("AccountID");
-            entity.Property(e => e.Address).HasMaxLength(500);
-            entity.Property(e => e.Dob)
-                .HasColumnType("date")
-                .HasColumnName("DOB");
-            entity.Property(e => e.Email).HasMaxLength(250);
-            entity.Property(e => e.Name).HasMaxLength(100);
-            entity.Property(e => e.PhoneNumber)
-                .HasMaxLength(20)
-                .IsUnicode(false);
-            entity.Property(e => e.Status).HasMaxLength(20);
+            entity.Property(e => e.AccountId).HasColumnName("AccountId");
+            entity.Property(e => e.Name).HasMaxLength(100).HasColumnName("Name");
+            entity.Property(e => e.Email).HasMaxLength(250).HasColumnName("Email");
+            entity.Property(e => e.Address).HasMaxLength(500).HasColumnName("Address");
+            entity.Property(e => e.PhoneNumber).HasMaxLength(20).IsUnicode(false);
+            entity.Property(e => e.Dob).HasColumnName("DOB");
+            entity.Property(e => e.Gender).HasColumnName("Gender");
+            entity.Property(e => e.Point).HasColumnName("Point");
+            entity.Property(e => e.Status).HasMaxLength(20).HasColumnName("Status");
         });
 
         modelBuilder.Entity<Discount>(entity =>
