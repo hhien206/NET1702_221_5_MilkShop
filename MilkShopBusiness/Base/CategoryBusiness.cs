@@ -116,19 +116,20 @@ namespace MilkShopBusiness.Base
 
         public async Task<IMilkShopResult> Update(Category Category)
         {
+            //int result = await _CategoryRepository.UpdateAsync(Category);
+            int result = await _unitOfWork.CategoryRepository.UpdateAsync(Category);
+
+            if (result > 0)
+            {
+                return new MilkShopResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+            }
+            else
+            {
+                return new MilkShopResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+            }
             try
             {
-                //int result = await _CategoryRepository.UpdateAsync(Category);
-                int result = await _unitOfWork.CategoryRepository.UpdateAsync(Category);
-
-                if (result > 0)
-                {
-                    return new MilkShopResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
-                }
-                else
-                {
-                    return new MilkShopResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
-                }
+               
             }
             catch (Exception ex)
             {

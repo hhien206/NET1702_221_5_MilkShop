@@ -17,7 +17,7 @@ public partial class Category
     public bool Status { get; set; }
     public int SortOrder { get; set; }
     public DateOnly CreatedDate { get; set; }
-    public DateTime UpdatedDate { get; set; }
+    public DateOnly UpdatedDate { get; set; }
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

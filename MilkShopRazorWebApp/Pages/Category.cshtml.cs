@@ -53,6 +53,9 @@ namespace MilkShopRazorWebApp.Pages
 
         private void SaveCategory()
         {
+            this.category.CreatedDate = DateOnly.FromDateTime(DateTime.Now);
+            this.category.UpdatedDate = DateOnly.FromDateTime(DateTime.Now);
+
             var categoryBusiness = _categoryBusiness.Save(this.category);
             if (categoryBusiness != null)
             {
@@ -66,6 +69,10 @@ namespace MilkShopRazorWebApp.Pages
 
         private void UpdateCategory()
         {
+            this.category.CreatedDate = DateOnly.FromDateTime(DateTime.Now);
+
+            this.category.UpdatedDate = DateOnly.FromDateTime(DateTime.Now);
+
             var categoryBusiness = _categoryBusiness.Update(this.category);
             if (categoryBusiness != null)
             {
@@ -76,6 +83,7 @@ namespace MilkShopRazorWebApp.Pages
                 this.Message = "Error system";
             }
         }
+
 
         private void DeleteCategory()
         {
