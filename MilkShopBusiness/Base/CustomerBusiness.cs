@@ -145,7 +145,40 @@ namespace MilkShopBusiness.Base
             }
         }
 
-       
+
+        public async Task<IMilkShopResult> SearchCustomer(string value, int? pageIndex, int pageSize)
+        {
+            var customer = await _unitOfWork.CustomerRepository.SearchCustomer(value, pageIndex, pageSize);
+            try
+            {
+                if (customer == null)
+                {
+                    return new MilkShopResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG, null);
+                }
+                return new MilkShopResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, customer);
+            }
+            catch (Exception ex)
+            {
+                return new MilkShopResult(Const.FAIL_READ_CODE, ex.ToString());
+            }
+        }
+
+        public async Task<IMilkShopResult> GetAllCustomerPagingAsync(int? pageIndex, int pageSize)
+        {
+            var customer = await _unitOfWork.CustomerRepository.GetCustomerPagingAsync(pageIndex, pageSize);
+            try
+            {
+                if (customer == null)
+                {
+                    return new MilkShopResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG, null);
+                }
+                return new MilkShopResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, customer);
+            }
+            catch (Exception ex)
+            {
+                return new MilkShopResult(Const.FAIL_READ_CODE, ex.ToString());
+            }
+        }
 
     }
 }

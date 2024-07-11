@@ -12,6 +12,9 @@
                 <MenuItem Header="Category" IsCheckable="False" FontSize="12" Click="Open_wCategory_Click">
 
                 </MenuItem>
+                <MenuItem Header="Customer" IsCheckable="False" FontSize="12" Click="Open_wCustomer_Click">
+
+                </MenuItem>
             </MenuItem>
 
         </Menu>

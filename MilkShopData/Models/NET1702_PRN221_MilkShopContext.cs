@@ -34,7 +34,7 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
     public virtual DbSet<Product> Products { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("data source=w4v3\\SQL2019;initial catalog=NET1702_PRN221_MilkShop;user id=sa;password=12345;Integrated Security=True;TrustServerCertificate=True");
+        optionsBuilder.UseSqlServer("data source=LAPTOP-881Q2J1T;initial catalog=NET1702_PRN221_MilkShop;user id=sa;password=12345;Integrated Security=True;TrustServerCertificate=True");
         base.OnConfiguring(optionsBuilder);
     }
 
@@ -62,9 +62,16 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
             entity.HasKey(e => e.CategoryId).HasName("Category_pk");
 
             entity.ToTable("Category");
-
             entity.Property(e => e.CategoryName).HasMaxLength(250);
             entity.Property(e => e.Type).HasMaxLength(250);
+            entity.Property(e => e.Description).HasColumnType("text");
+            entity.Property(e => e.ParentCategoryID).HasColumnName("ParentCategoryId");
+            entity.Property(e => e.ImageURL).HasMaxLength(255).HasColumnName("ImageURL");
+            entity.Property(e => e.MetaKeywords).HasMaxLength(255);       
+            entity.Property(e => e.Status).HasColumnType("tinyint");
+            entity.Property(e => e.SortOrder).HasColumnType("int");
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<Customer>(entity =>

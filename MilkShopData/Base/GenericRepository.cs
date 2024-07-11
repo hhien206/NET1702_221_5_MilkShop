@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MilkShop.common;
 using MilkShopData.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace MilkShopData.Base
 {
@@ -151,6 +154,44 @@ namespace MilkShopData.Base
         public async Task<T> GetByIdAsync(string code)
         {
             return await _dbSet.FindAsync(code);
+        }
+
+
+
+        public async Task<List<Customer>> SearchCustomer(string value, int? pageIndex, int pageSize)
+        {
+            value = value.Trim().ToLower();
+            DateOnly dateValue;
+            bool isValidDate = DateOnly.TryParse(value, out dateValue);
+
+            var customersQuery = _context.Customers
+                                        .OrderByDescending(m => m.CustomerId)
+                                        .Where(m =>
+
+                                            m.Name.Contains(value) ||
+                                            m.Email.Contains(value) ||
+                                            m.Address.Contains(value) ||
+                                            m.PhoneNumber.Contains(value));
+
+            var paginatedCustomers = await PaginatedList<Customer>.CreateAsync(customersQuery.AsNoTracking(), pageIndex ?? 1, pageSize);
+            return paginatedCustomers;
+        }
+
+        public bool CustomerExisted(int id)
+        {
+            return _context.Customers.Any(e => e.CustomerId == id);
+        }
+
+        public IEnumerable GetAllMentor()
+        {
+            return _context.Customers;
+        }
+
+        public async Task<PaginatedList<Customer>> GetCustomerPagingAsync(int? pageIndex, int pageSize)
+        {
+            var paginatedCustomer = await PaginatedList<Customer>.CreateAsync(
+                _context.Customers.AsNoTracking().OrderByDescending(m => m.CustomerId), pageIndex ?? 1, pageSize);
+            return paginatedCustomer;
         }
     }
 }

@@ -8,6 +8,7 @@ namespace MilkShopData.Models;
 public partial class Category
 {
     public int CategoryId { get; set; }
+
     public string CategoryName { get; set; }
     public string Type { get; set; }
     public string Description { get; set; }

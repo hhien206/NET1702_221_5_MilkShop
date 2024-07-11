@@ -2,7 +2,7 @@
 @model MilkShopRazorWebApp.Pages.CustomerModel
 @{
     ViewData["Title"] = "Customer page";
-    var Customers = Model.customers;
+    var Customers = Model.Customers;
 }
 
 <div class="text-center">
@@ -17,12 +17,26 @@
     </div>
 </div>
 
+<div style="margin-top: 30px">
+    <div>
+        <form method="get" class="form-inline mb-3">
+            <div class="input-group">
+                <input type="text" class="form-control" asp-for="Search" placeholder="Search" />
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>
+        
+    </div>
+</div>
+
 
     <div >
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr class="card-header">
-                    <th class="card-title text-center"></th>
+                    <th class="card-title text-center">ID</th>
                     <th class="card-title text-center">Account ID</th>
                     <th class="card-title text-center">Name</th>
                     <th class="card-title text-center">Email</th>
@@ -42,51 +56,51 @@
                     {
                         <form method="post">
                         <tr>
-                            <td>
-                                <div >
+                        <td >
+                            <div >
                                     <label for="CustomerId"></label>
-                                    <input asp-for="Customer.CustomerId" class="form-control" value="@customer.CustomerId" readonly="true" />
+                                <input asp-for="Customer.CustomerId" class="form-control" value="@customer.CustomerId" readonly="true" style=" width: 50px;" />
                                 </div>
                             </td>
                             <td>
-                                <div >
+                            <div width: 70px;>
                                     <label for="AccountId"></label>
-                                <input asp-for="Customer.AccountId" class="form-control" value="@customer.AccountId" readonly="true" />
+                                <input asp-for="Customer.AccountId" class="form-control" value="@customer.AccountId" readonly="true" style=" width: 50px;" />
                                 </div>
                             </td>
                             <td>
                                 <div >
                                     <label for="CategoryName"></label>
-                                    <input asp-for="Customer.Name" class="form-control" value="@customer.Name" />
+                                <input asp-for="Customer.Name" class="form-control" value="@customer.Name" style=" width: 150px;" />
                                 </div>
                             </td>
                             <td>
                                 <div >
                                     <label for="Type"></label>
-                                    <input asp-for="Customer.Email" class="form-control" value="@customer.Email" />
+                                <input asp-for="Customer.Email" class="form-control" value="@customer.Email" style=" width: 150px;" />
                                 </div>
                             </td>
                             <td>
                                 <div >
                                     <label for="Address"></label>
-                                    <input asp-for="Customer.Address" class="form-control" value="@customer.Address" />
+                                <input asp-for="Customer.Address" class="form-control" value="@customer.Address" style=" width: 150px;" />
                                 </div>
                             </td>
                             <td>
                                 <div >
                                     <label for="PhoneNumber"></label>
-                                    <input asp-for="Customer.PhoneNumber" class="form-control" value="@customer.PhoneNumber" />
+                                <input asp-for="Customer.PhoneNumber" class="form-control" value="@customer.PhoneNumber" style=" width: 100px;" />
                                 </div>
                             </td>
                             <td>
                                 <div >
                                     <label for="DOB"></label>
-                                    <input asp-for="Customer.Dob" class="form-control" value="@customer.Dob"/>
+                                <input asp-for="Customer.Dob" class="form-control" value="@customer.Dob" style=" width: 100px;" />
                                     
                                 </div>
                             </td>
                             <td>
-                                <div >
+                            <div style=" width: 85px;">
                                     <label for="Gender"></label>
                                     @* <input asp-for="Customer.Gender" class="form-control" value="@customer.Gender"/> *@
                                     <select asp-for="Customer.Gender" class="form-control" asp-items="ViewBag.Gender">
@@ -99,11 +113,11 @@
                             <td>
                                 <div >
                                     <label for="Point"></label>
-                                    <input asp-for="Customer.Point" class="form-control" value="@customer.Point" />
+                                <input asp-for="Customer.Point" class="form-control" value="@customer.Point" style=" width: 70px;" />
                                 </div>
                             </td>
                             <td>
-                                <div >
+                            <div style=" width: 70px;">
                                     <label for="Status"></label>
                                     @* <input asp-for="Customer.Status" class="form-control" value="@customer.Status" /> *@
                                    
@@ -129,6 +143,26 @@
         </table>
     </div>
 
+@{
+    var prevDisabled = !Model.Customers.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Customers.HasNextPage ? "disabled" : "";
+}
+<div class="flex flex-row justify-content-evenly">
+    <div class="flex-column">
+        <a asp-page="./Customer"
+           asp-route-pageIndex="@(Model.Customers.PageIndex - 1)"
+           asp-route-pageSize="@(Model.PageSize)"
+           class="btn btn-primary @prevDisabled">
+            Previous
+        </a>
+        <a asp-page="./Customer"
+           asp-route-pageIndex="@(Model.Customers.PageIndex + 1)"
+           asp-route-pageSize="@(Model.PageSize)"
+           class="btn btn-primary @nextDisabled">
+            Next
+        </a>
+    </div>
+</div>
 
 <div class="modal fade" id="currencyModal" tabindex="-1" aria-labelledby="currencyModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -192,100 +226,6 @@
     </div>
 </div>
 
-@* <div class="modal fade" id="update" tabindex="-1" aria-labelledby="currencyModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "frm", id = "frm" }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="modal-header">
-                    <h5 class="modal-title" id="currencyModalLabel">Customer</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="currencyModalContent"></div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">CustomerId</label>
-                                    <input asp-for="Customer.CustomerId" class="form-control" />
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="1">CustomerAccountID</label>
-                                    <input asp-for="Customer.AccountId" class="form-control" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">CustomerName</label>
-                                    <input asp-for="Customer.Name" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">CustomerEmail</label>
-                                    <input asp-for="Customer.Email" class="form-control" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">CustomerAddress</label>
-                                    <input asp-for="Customer.Address" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">CustomerPhoneNumber</label>
-                                    <input asp-for="Customer.PhoneNumber" class="form-control" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">CustomerDOB</label>
-                                    <input asp-for="Customer.Dob" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">CustomerGender</label>
-                                    <input asp-for="Customer.Gender" class="form-control" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">CustomerPoint</label>
-                                    <input asp-for="Customer.Point" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">CustomerStatus</label>
-                                    <input asp-for="Customer.Status" class="form-control" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <label>@Model.Message</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="btSave" type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            }
-        </div>
-    </div>
-</div> *@
 
 @section scripts
                                 {

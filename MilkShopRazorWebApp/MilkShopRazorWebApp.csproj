@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MilkShopBusiness\MilkShopBusiness.csproj" />
     <ProjectReference Include="..\MilkShopData\MilkShopData.csproj" />
+	<ProjectReference Include="..\MilkShop.common\MilkShop.common.csproj" />
   </ItemGroup>
 
 </Project>
