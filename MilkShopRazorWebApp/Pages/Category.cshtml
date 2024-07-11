@@ -24,6 +24,14 @@
                     <th class="card-title text-center">Id</th>
                     <th class="card-title text-center">Name</th>
                     <th class="card-title text-center">Type</th>
+                    <th class="card-title text-center">Description</th>
+                    <th class="card-title text-center">ParentCategoryID</th>
+                    <th class="card-title text-center">ImageURL</th>
+                    <th class="card-title text-center">MetaKeywords</th>
+                    <th class="card-title text-center">Status</th>
+                    <th class="card-title text-center">SortOrder</th>
+                    <th class="card-title text-center">CreatedDate</th>
+                    <th class="card-title text-center">UpdatedDate</th>
                     <th class="card-title text-center"></th>
                 </tr>
             </thead>
@@ -51,7 +59,55 @@
                                     <label for="Type"></label>
                                     <input asp-for="category.Type" class="form-control" value="@category.Type" />
                                 </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Description"></label>
+                                    <input asp-for="category.Description" class="form-control" value="@category.Description" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="ParentCategoryID"></label>
+                                    <input asp-for="category.ParentCategoryID" class="form-control" value="@category.ParentCategoryID" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="ImageURL"></label>
+                                    <input asp-for="category.ImageURL" class="form-control" value="@category.ImageURL" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="MetaKeywords"></label>
+                                    <input asp-for="category.MetaKeywords" class="form-control" value="@category.MetaKeywords" />
+                                </div>
                             </td>                          
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Status"></label>
+                                    <input asp-for="category.Status" class="form-control" value="@category.Status" readonly="true" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="SortOrder"></label>
+                                    <input asp-for="category.SortOrder" class="form-control" value="@category.SortOrder" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="CreatedDate"></label>
+                                    <input asp-for="category.CreatedDate" class="form-control" value="@category.CreatedDate" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="UpdatedDate"></label>
+                                    <input asp-for="category.UpdatedDate" class="form-control" value="@category.UpdatedDate" />
+                                </div>
+                            </td>
                             <td>
                                 <button asp-page-handler="Update" id="btUpdate" type="submit" class="btn btn-primary">Update</button>
                             </td>
@@ -86,13 +142,49 @@
                                     <label for="1">CategoryName</label>
                                     <input asp-for="category.CategoryName" class="form-control" />
                                 </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label for="1">Type</label>
+                                        <input asp-for="category.Type" class="form-control" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group row">
                                 <div class="col-md-6">
-                                    <label for="1">Type</label>
-                                    <input asp-for="category.Type" class="form-control" />
+                                    <label for="1">Description</label>
+                                    <input asp-for="category.Description" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="1">ParentCategoryID</label>
+                                    <input asp-for="category.ParentCategoryID" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="1">ImageURL</label>
+                                    <input asp-for="category.ImageURL" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="1">MetaKeywords</label>
+                                    <input asp-for="category.MetaKeywords" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="1">SortOrder</label>
+                                    <input asp-for="category.SortOrder" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="1">CreatedDate</label>
+                                    <input asp-for="category.CreatedDate" class="form-control" />
                                 </div>
                             </div>
                         </div>
@@ -133,13 +225,55 @@
                                     <label for="1">CategoryName</label>
                                     <input asp-for="category.CategoryName" class="form-control" />
                                 </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label for="1">Type</label>
+                                        <input asp-for="category.Type" class="form-control" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group row">
                                 <div class="col-md-6">
-                                    <label for="1">Type</label>
-                                    <input asp-for="category.Type" class="form-control" />
+                                    <label for="1">Description</label>
+                                    <input asp-for="category.Description" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="1">ParentCategoryID</label>
+                                    <input asp-for="category.ParentCategoryID" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="1">ImageURL</label>
+                                    <input asp-for="category.ImageURL" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="1">MetaKeywords</label>
+                                    <input asp-for="category.MetaKeywords" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="1">Status</label>
+                                    <input asp-for="category.Status" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="1">SortOrder</label>
+                                    <input asp-for="category.SortOrder" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="1">CreatedDate</label>
+                                    <input asp-for="category.CreatedDate" class="form-control" />
                                 </div>
                             </div>
                         </div>

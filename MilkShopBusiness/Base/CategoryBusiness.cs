@@ -41,7 +41,7 @@ namespace MilkShopBusiness.Base
 
                 //var currencies = _DAO.GetAll();
                 //var currencies = await _CategoryRepository.GetAllAsync();
-                var currencies = await _unitOfWork.CategoryRepository.GetAllAsync();
+                var currencies = await _unitOfWork.CategoryRepository.GetAllCategory();
 
 
                 if (currencies == null)
@@ -116,19 +116,20 @@ namespace MilkShopBusiness.Base
 
         public async Task<IMilkShopResult> Update(Category Category)
         {
+            //int result = await _CategoryRepository.UpdateAsync(Category);
+            int result = await _unitOfWork.CategoryRepository.UpdateAsync(Category);
+
+            if (result > 0)
+            {
+                return new MilkShopResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+            }
+            else
+            {
+                return new MilkShopResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+            }
             try
             {
-                //int result = await _CategoryRepository.UpdateAsync(Category);
-                int result = await _unitOfWork.CategoryRepository.UpdateAsync(Category);
-
-                if (result > 0)
-                {
-                    return new MilkShopResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
-                }
-                else
-                {
-                    return new MilkShopResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
-                }
+               
             }
             catch (Exception ex)
             {
@@ -143,8 +144,8 @@ namespace MilkShopBusiness.Base
             if (Category != null)
             {
                 //var result = await _CategoryRepository.RemoveAsync(Category);
-                var result = await _unitOfWork.CategoryRepository.RemoveAsync(Category);
-                if (result)
+                var result = await _unitOfWork.CategoryRepository.RemoveCategoryAsync(Category);
+                if (result>0)
                 {
                     return new MilkShopResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
                 }
