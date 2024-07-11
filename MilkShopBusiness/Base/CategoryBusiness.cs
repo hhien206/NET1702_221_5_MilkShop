@@ -94,6 +94,7 @@ namespace MilkShopBusiness.Base
 
         public async Task<IMilkShopResult> Save(Category category)
         {
+            category.CreatedDate = DateTime.Now;
             int result = await _unitOfWork.CategoryRepository.AddCategoryAsync(category);
             if (result > 0)
             {
@@ -116,8 +117,14 @@ namespace MilkShopBusiness.Base
 
         public async Task<IMilkShopResult> Update(Category Category)
         {
-            //int result = await _CategoryRepository.UpdateAsync(Category);
-            int result = await _unitOfWork.CategoryRepository.UpdateAsync(Category);
+            Category.UpdatedDate = DateTime.Now;
+            Category categoryy = _unitOfWork.CategoryRepository.GetById(Category.CategoryId);
+            categoryy.CategoryName = Category.CategoryName;
+            categoryy.Type = Category.Type;
+            categoryy.Description = Category.Description;
+            categoryy.ImageUrl = Category.ImageUrl;
+            categoryy.MetaKeywords = Category.MetaKeywords;
+            int result = await _unitOfWork.CategoryRepository.UpdateAsync(categoryy);
 
             if (result > 0)
             {

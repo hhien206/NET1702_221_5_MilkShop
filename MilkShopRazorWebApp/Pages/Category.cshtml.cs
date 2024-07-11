@@ -23,9 +23,10 @@ namespace MilkShopRazorWebApp.Pages
         [BindProperty(SupportsGet = true)]
         public string SearchMetaKeywords { get; set; }
 
-        public void OnGet()
+        public async Task<IActionResult> OnGet()
         {
             categories = GetCategories(SearchCategoryName, SearchType, SearchMetaKeywords);
+            return Page();
         }
 
         public IActionResult OnPost()
@@ -55,18 +56,9 @@ namespace MilkShopRazorWebApp.Pages
             {
                 var categories = (List<Category>)categoryBusiness.Result.Data;
 
-                if (!string.IsNullOrEmpty(categoryName))
-                {
-                    categories = categories.Where(c => c.CategoryName.Contains(categoryName, StringComparison.OrdinalIgnoreCase)).ToList();
-                }
-                if (!string.IsNullOrEmpty(type))
-                {
-                    categories = categories.Where(c => c.Type.Contains(type, StringComparison.OrdinalIgnoreCase)).ToList();
-                }
-                if (!string.IsNullOrEmpty(metaKeywords))
-                {
-                    categories = categories.Where(c => c.MetaKeywords.Contains(metaKeywords, StringComparison.OrdinalIgnoreCase)).ToList();
-                }
+                if (categoryName != null) categories = categories.FindAll(l => l.CategoryName != null && l.CategoryName.Contains(categoryName));
+                if (type != null) categories = categories.FindAll(l => l.Type != null && l.Type.Contains(type));
+                if (metaKeywords != null) categories = categories.FindAll(l => l.MetaKeywords != null && l.MetaKeywords.Contains(metaKeywords));
 
                 return categories;
             }
@@ -75,8 +67,6 @@ namespace MilkShopRazorWebApp.Pages
 
         private void SaveCategory()
         {
-            category.CreatedDate = DateOnly.FromDateTime(DateTime.Now);
-            category.UpdatedDate = DateOnly.FromDateTime(DateTime.Now);
 
             var categoryBusiness = _categoryBusiness.Save(category);
             if (categoryBusiness != null)
@@ -91,8 +81,6 @@ namespace MilkShopRazorWebApp.Pages
 
         private void UpdateCategory()
         {
-            category.CreatedDate = DateOnly.FromDateTime(DateTime.Now);
-            category.UpdatedDate = DateOnly.FromDateTime(DateTime.Now);
 
             var categoryBusiness = _categoryBusiness.Update(category);
             if (categoryBusiness != null)
