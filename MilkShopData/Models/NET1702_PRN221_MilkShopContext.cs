@@ -2,22 +2,26 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MilkShopData.Models;
 
 public partial class NET1702_PRN221_MilkShopContext : DbContext
 {
-    public NET1702_PRN221_MilkShopContext()
-    {
-    }
-
     public NET1702_PRN221_MilkShopContext(DbContextOptions<NET1702_PRN221_MilkShopContext> options)
         : base(options)
     {
     }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer("data source=LAPTOP-881Q2J1T;initial catalog=NET1702_PRN221_MilkShop;user id=sa;password=12345;Integrated Security=True;TrustServerCertificate=True");
+        base.OnConfiguring(optionsBuilder);
+    }
+    public NET1702_PRN221_MilkShopContext()
+    {
+
+    }
+
 
     public virtual DbSet<Category> Categories { get; set; }
 
@@ -30,46 +34,33 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseSqlServer("Server=LAPTOP-881Q2J1T;Database=NET1702_PRN221_MilkShop;User Id=sa;Password=12345;Integrated Security=True;TrustServerCertificate=True");
-        }
-    }
-    protected override void ConfigureConventions(ModelConfigurationBuilder builder)
-    {
-        builder.Properties<DateOnly>()
-               .HaveConversion<DateOnlyConverter>()
-               .HaveColumnType("date");
-    }
-    public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>
-    {
-        /// <summary>
-        /// Creates a new instance of this converter.
-        /// </summary>
-        public DateOnlyConverter() : base(
-            d => d.ToDateTime(TimeOnly.MinValue),
-            d => DateOnly.FromDateTime(d))
-        { }
-    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
         {
             entity.HasKey(e => e.CategoryId).HasName("Category_pk");
 
-            entity.ToTable("Category");
+            entity.ToTable("Category", tb => tb.HasTrigger("trgUpdateCategory"));
+
             entity.Property(e => e.CategoryName).HasMaxLength(250);
-            entity.Property(e => e.Type).HasMaxLength(250);
+            entity.Property(e => e.CreatedDate).HasColumnType("date");
             entity.Property(e => e.Description).HasColumnType("text");
-            entity.Property(e => e.ParentCategoryID).HasColumnName("ParentCategoryId");
-            entity.Property(e => e.ImageURL).HasMaxLength(255).HasColumnName("ImageURL");
-            entity.Property(e => e.MetaKeywords).HasMaxLength(255);       
-            entity.Property(e => e.Status).HasColumnType("tinyint");
-            entity.Property(e => e.SortOrder).HasColumnType("int");
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("ImageURL");
+            entity.Property(e => e.MetaKeywords)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.ParentCategoryId).HasColumnName("ParentCategoryID");
+            entity.Property(e => e.Status).HasDefaultValueSql("((1))");
+            entity.Property(e => e.Type).HasMaxLength(250);
+            entity.Property(e => e.UpdatedDate).HasColumnType("date");
+
+            entity.HasOne(d => d.ParentCategory).WithMany(p => p.InverseParentCategory)
+                .HasForeignKey(d => d.ParentCategoryId)
+                .HasConstraintName("FK_ParentCategoryID");
         });
 
         modelBuilder.Entity<Customer>(entity =>
@@ -110,7 +101,11 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
 
             entity.Property(e => e.Address).HasMaxLength(250);
             entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
-            entity.Property(e => e.NameReceiver).HasMaxLength(1);
+            entity.Property(e => e.DateCreate).HasColumnType("date");
+            entity.Property(e => e.DateUpdate).HasColumnType("date");
+            entity.Property(e => e.NameReceiver)
+                .HasMaxLength(200)
+                .IsFixedLength();
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(20)
                 .IsUnicode(false);

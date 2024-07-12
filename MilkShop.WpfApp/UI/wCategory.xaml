@@ -5,31 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MilkShop.WpfApp.UI"
         mc:Ignorable="d"
-        Title="wCategory" Height="450" Width="800">
+        Title="wCategory" Height="450" Width="892">
     <Grid>
         <StackPanel Orientation="Vertical">
             <GroupBox Header="Category Form" Margin="10">
-                <Grid Height="50">
+                <Grid Height="94">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="212"/>
+                        <ColumnDefinition Width="68"/>
                         <ColumnDefinition Width="200"/>
                         <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="200"/>
                         <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="80"/>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="0*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Grid.Row="0" Content="CategoryId" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
-                    <TextBox Grid.Column="1" Grid.Row="0" x:Name="txtCategoryId" Height="25" Text="{Binding Path=Categoty.CategoryId, Mode=TwoWay}"  Margin="5"  Width="180" HorizontalAlignment="Left"/>
-                    <Label Grid.Column="2" Grid.Row="0" Content="CategoryName" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
-                    <TextBox Grid.Row="0" Grid.Column="3" x:Name="txtCategoryName" Height="25" Text="{Binding Path=Categoty.CategoryName, Mode=TwoWay}"  Margin="5"  Width="180" HorizontalAlignment="Left"/>
-                    <Label Grid.Column="4" Grid.Row="0" Content="Type" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
-                    <TextBox Grid.Column="5" Grid.Row="0" x:Name="txtType" Height="25" Text="{Binding Path=Category.Type, Mode=TwoWay}"  Margin="5"  Width="180" HorizontalAlignment="Left"/>
+                    <Label Grid.Column="0" Grid.Row="0" Content="CategoryId" HorizontalAlignment="Left" VerticalContentAlignment="Center" Margin="12,0,0,0" Width="68" />
+                    <TextBox Grid.Row="0" x:Name="txtCategoryId" Text="{Binding Path=Categoty.CategoryId, Mode=TwoWay}"  Margin="10,35,0,34"  Width="54" HorizontalAlignment="Left" Grid.Column="1"/>
+                    <Label Grid.Column="1" Grid.Row="0" Content="CategoryName" HorizontalAlignment="Left" VerticalContentAlignment="Center" Margin="69,28,0,28" Width="88" />
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtCategoryName" Text="{Binding Path=Categoty.CategoryName, Mode=TwoWay}"  Margin="180,33,0,35"  Width="180" HorizontalAlignment="Left" Grid.ColumnSpan="3"/>
+                    <Label Grid.Column="3" Grid.Row="0" Content="Type" HorizontalAlignment="Left" VerticalContentAlignment="Center" Width="35" Margin="85,-1,0,1" />
+                    <TextBox Grid.Column="3" Grid.Row="0" x:Name="txtType" Text="{Binding Path=Category.Type, Mode=TwoWay}"  Margin="125,34,0,34"  Width="65" HorizontalAlignment="Left"/>
                 </Grid>
             </GroupBox>
             <StackPanel Height="40" Orientation="Horizontal" HorizontalAlignment="Right">
@@ -43,6 +43,14 @@
                         <DataGridTextColumn Header="CategoryId" Binding="{Binding Path=CategoryId}" Width="50"  IsReadOnly="True"/>
                         <DataGridTextColumn Header="CategoryName" Binding="{Binding Path=CategoryName}" Width="50"  IsReadOnly="True"/>
                         <DataGridTextColumn Header="Type" Binding="{Binding Path=Type}" Width="50"  IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="50"  IsReadOnly="True"/>
+                        <DataGridTextColumn Header="ParentCategoryId" Binding="{Binding Path=ParentCategoryId}" Width="50"  IsReadOnly="True"/>
+                        <DataGridTextColumn Header="MetaKeywords" Binding="{Binding Path=MetaKeywords}" Width="50"  IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Status" Binding="{Binding Path=Status}" Width="50"  IsReadOnly="True"/>
+                        <DataGridTextColumn Header="SortOrder" Binding="{Binding Path=SortOrder}" Width="50"  IsReadOnly="True"/>
+                        <DataGridTextColumn Header="CreatedDate" Binding="{Binding Path=CreatedDate}" Width="50"  IsReadOnly="True"/>
+                        <DataGridTextColumn Header="UpdatedDate" Binding="{Binding Path=UpdatedDate}" Width="50"  IsReadOnly="True"/>
+
                         <DataGridTemplateColumn Width="50">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

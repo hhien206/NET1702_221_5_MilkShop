@@ -1,0 +1,169 @@
+﻿@page
+@model MilkShopRazorWebApp.Pages.OrderDetailModel
+@{
+    ViewData["Title"] = "Order Detail page";
+    var orderDetails = Model.OrderDetails;
+    var pageNumber = Model.PageNumber;
+    var currentPageNumber = Model.CurrentPageNumber;
+}
+
+<div class="row">
+    <div class="col-md-12 text-end">
+        <button type="button" class="btn btn-primary" onclick="add();">
+            Add
+        </button>
+    </div>
+</div>
+
+<form method="post" asp-page-handler="Search">
+    <label for="UnitPriceMin">Unit Price Min</label>
+    <input type="text" class="form-control" id="UnitPriceMin" name="UnitPriceMin" />
+    <label for="UnitPriceMax">Unit Price Max</label>
+    <input type="text" class="form-control" id="UnitPriceMax" name="UnitPriceMax" />
+    <label for="TotalPriceMin">Total Price Min</label>
+    <input type="text" class="form-control" id="TotalPriceMin" name="TotalPriceMin" />
+    <label for="TotalPriceMax">Total Price Max</label>
+    <input type="text" class="form-control" id="TotalPriceMax" name="TotalPriceMax" />
+    <button type="submit" class="btn btn-danger">Search</button>
+</form>
+
+<h1>OrderDetails</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>OrderDetailId</th>
+            <th>OrderId</th>
+            <th>ProductId</th>
+            <th>UnitPrice</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var orderDetail in orderDetails)
+        {
+            <tr>
+                <td>@orderDetail.OrderDetailId</td>
+                <td>@orderDetail.OrderId</td>
+                <td>@orderDetail.ProductId</td>
+                <td>
+                    <input asp-for="@orderDetail.UnitPrice" class="form-control" id="@($"UnitPrice{orderDetail.OrderDetailId}")" name="@($"UnitPrice{orderDetail.OrderDetailId}")" value="@orderDetail.UnitPrice" />
+                </td>
+                <td>
+                    <input asp-for="@orderDetail.Quantity" class="form-control" id="@($"Quantity{orderDetail.OrderDetailId}")" name="@($"Quantity{orderDetail.OrderDetailId}")" value="@orderDetail.Quantity" />
+                </td>
+                <td>@orderDetail.Total</td>
+                <td>
+                    <form method="post" asp-route-orderDetailId="@orderDetail.OrderDetailId" asp-page-handler="Update" onsubmit="return updateHiddenFields('@orderDetail.OrderDetailId')">
+                        <input type="hidden" id="UnitPriceHidden-@orderDetail.OrderDetailId" name="UnitPrice" />
+                        <input type="hidden" id="QuantityHidden-@orderDetail.OrderDetailId" name="Quantity" />
+                        <button type="submit" class="btn btn-danger">Update</button>
+                    </form>
+                    <form method="post" asp-page-handler="Delete" asp-route-orderDetailId="@orderDetail.OrderDetailId">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="orderDetailModel" tabindex="-1" aria-labelledby="orderModelLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "frm", id = "frm" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderDetailModelLabel">Order Detail Transaction</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="orderDetailModelContent"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="OrderId">Order Id</label>
+                                    <input asp-for="orderDetail.OrderId" class="form-control" id="OrderId" name="OrderId" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="ProductId">Product Id</label>
+                                    <input asp-for="orderDetail.ProductId" class="form-control" id="ProductId" name="ProductId" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="UnitPrice">Unit Price</label>
+                                    <input asp-for="orderDetail.UnitPrice" class="form-control" id="UnitPrice" name="UnitPrice" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Quantity">Quantity</label>
+                                    <input asp-for="orderDetail.Quantity" class="form-control" id="Quantity" name="Quantity" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btSave" type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="pagination">
+    @for (int i = 1; i <= pageNumber; i++)
+    {
+        <form method="post" asp-page-handler="Page" asp-route-number="@i">
+            <button class="page-button @(i == currentPageNumber ? "current-page" : "")">@i</button>
+        </form>
+
+    }
+</div>
+
+<style>
+    .pagination {
+        margin-top: 10px;
+    }
+
+    .page-button {
+        background-color: white;
+        border: 1px solid #ccc;
+        color: #333;
+        padding: 5px 10px;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+        .page-button.current-page {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+</style>
+
+@section scripts
+    {
+    <script type="text/javascript">
+        function add() {
+            $('#orderDetailModel').modal('show');
+        }
+        function updateHiddenFields(orderDetailId) {
+
+            var unitPrice = document.getElementById(`UnitPrice${orderDetailId}`).value;
+            var quantity = document.getElementById(`Quantity${orderDetailId}`).value;
+
+            document.getElementById(`UnitPriceHidden-${orderDetailId}`).value = unitPrice;
+            document.getElementById(`QuantityHidden-${orderDetailId}`).value = quantity
+
+            return true;
+        }
+    </script>
+}
