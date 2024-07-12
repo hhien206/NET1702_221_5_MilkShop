@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_MilkShop", "Cons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MilkShop.common", "MilkShop.common\MilkShop.common.csproj", "{8F0CA8BA-A763-492A-BA71-867EFCD4C954}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MilkShop.WpfApp", "MilkShop.WpfApp\MilkShop.WpfApp.csproj", "{A1E110A4-F7EE-4CC6-9099-743454D04C7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MilkShop.WpfApp", "MilkShop.WpfApp\MilkShop.WpfApp.csproj", "{A1E110A4-F7EE-4CC6-9099-743454D04C7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -9,6 +9,7 @@ namespace MilkShopData
         private CategoryRepository _category;
         private OrderRepository _order;
         private OrderDetailRepository _orderDetail;
+        private DiscountRepository _discount;
         public UnitOfWork()
         {
             _context ??= new NET1702_PRN221_MilkShopContext();
@@ -34,6 +35,15 @@ namespace MilkShopData
             {
                 return _orderDetail ??= new Repository.OrderDetailRepository();
             }
+        }
+        public DiscountRepository DiscountRepository
+        {
+            get
+            {
+                return _discount ??= new DiscountRepository();
+                //return _discount ??= new DiscountRepository(_context);
+            }
+
         }
     }
 }

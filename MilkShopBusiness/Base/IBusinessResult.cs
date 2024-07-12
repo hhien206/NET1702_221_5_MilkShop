@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MilkShopBusiness.Base
 {
-    internal interface IBusinessResult
+    public interface IBusinessResult
     {
         int Status { get; set; }
         string? Message { get; set; }

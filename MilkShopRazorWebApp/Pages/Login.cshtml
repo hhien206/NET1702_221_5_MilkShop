@@ -1,0 +1,81 @@
+﻿@page "/"
+@model MilkShopRazorWebApp.Pages.LoginModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Login";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            margin: 50px auto;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            background-color: #5bbede;
+            border-color: #5bbede;
+        }
+
+            .btn-primary:hover {
+                background-color: #4aa7c3;
+                border-color: #4aa7c3;
+            }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="form-header">Login</h1>
+        <hr />
+        <form method="post">
+            <h4 class="text-danger">@ViewData["message"]</h4>
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control form-control-sm" placeholder="Enter your username" required />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control form-control-sm" type="password" placeholder="Enter your password" required />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-6 text-center text-sm-start">
+                    <input type="submit" value="Login" class="btn btn-primary" />
+                </div>
+            </div>
+        </form>
+    </div> 
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</body>
+</html>
