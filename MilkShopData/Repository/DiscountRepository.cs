@@ -76,19 +76,19 @@ namespace MilkShopData.Repository
             }
 
             if (!string.IsNullOrEmpty(searchDiscountPercent))
-            {
+        {
                 double discountPercent = double.Parse(searchDiscountPercent);
                 listSearchDiscountPercent = query.Where(d => d.DiscountPercent == discountPercent).ToList();
                 foreach (var discount in listSearchDiscountPercent)
                 {
                     listDiscount.Add(discount);
-                }
+        }
             }
             if (searchFromDate.HasValue)
             {
                 listSearchFromDate = query.Where(d => d.FromDate == searchFromDate).ToList();
                 foreach (var discount in listSearchFromDate)
-                {
+        {
                     listDiscount.Add(discount);
                 }
             }
