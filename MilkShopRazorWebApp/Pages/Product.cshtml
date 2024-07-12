@@ -12,8 +12,8 @@
     <h1 class="display-6">Product management</h1>
 </div>
 <div class="ps-5 ms-5">
-    <div class="d-flex mt-2" >
-        
+    <div class="d-flex mt-2">
+
         <div class="mx-3">
             <div>
                 <input id="searchProduct" type="text" style="border-radius: 3px; border: 1px solid #dfe0e2;" class="px-2" placeholder="Product Name" />
@@ -27,7 +27,7 @@
                     Add
                 </button>
             </div>
-             
+
         </div>
     </div>
 </div>
@@ -53,7 +53,7 @@
 
     #MessageModal .modal-title {
         width: 100%;
-        text-align:center;
+        text-align: center;
         font-size: 1.5rem;
         color: #343a40;
     }
@@ -65,17 +65,19 @@
         border-radius: 5px;
         border: none;
     }
+
     table {
         width: 100%;
         table-layout: fixed;
         border-collapse: collapse;
     }
 
-    .btn-edit{
+    .btn-edit {
         display: flex;
         margin-top: 25px;
         column-gap: 5px;
     }
+
     th, td {
         border: 1px solid black;
         text-align: center;
@@ -85,10 +87,10 @@
 </style>
 <div class="row" style="display: flex;width: 2150px; align-items: center; margin-left: -420px;">
     <div class="col-md-12">
-        <table class="table table-striped table-bordered table-hover equal-width-table" >
+        <table class="table table-striped table-bordered table-hover equal-width-table">
             <thead>
-                <tr class="card-header" >
-                    
+                <tr class="card-header">
+
                     <th class="card-title text-center">Name</th>
                     <th class="card-title text-center">Category</th>
                     <th class="card-title text-center">Discount</th>
@@ -113,7 +115,7 @@
                     foreach (var Product in Products)
                     {
                         <tr>
-                            <form  id="Form" method="post">
+                            <form id="Form" method="post">
 
                             <td style="display: none">
                                 <div class="col-md-12">
@@ -239,12 +241,12 @@
                             </td>
                             <td>
                                 <div class="btn-edit">
-                                     @* <button type="submit" asp-page-handler="Update" class="btn btn-primary" id="savebtn" style="display:none" > Save</button>
-                                      <button type="button" id="editbtn" onclick="enableRowEditing(this)" class="btn btn-primary">Edit</button>
-                                     <button type="submit" asp-page-handler="Remove" class="btn btn-primary">Delete</button> *@
+                                        @* <button type="submit" asp-page-handler="Update" class="btn btn-primary" id="savebtn" style="display:none" > Save</button>
+                            <button type="button" id="editbtn" onclick="enableRowEditing(this)" class="btn btn-primary">Edit</button>
+                            <button type="submit" asp-page-handler="Remove" class="btn btn-primary">Delete</button> *@
 
-                                    <button type="submit" asp-page-handler="Update" class="btn btn-primary" id="savebtn" style="display:none" onclick="return confirmSave()">Save</button>
-                                    <button type="button" id="editbtn" onclick="enableRowEditing(this)" class="btn btn-primary">Edit</button>
+                                    <button type="submit" asp-page-handler="Update" class="btn btn-primary" id="savebtn_@Product.ProductId" style="display:none" onclick="return confirmSave()">Save</button>
+                                    <button type="button" id="editbtn" onclick="enableRowEditing(this, @Product.ProductId)" class="btn btn-primary">Edit</button>
                                     <button type="submit" asp-page-handler="Remove" class="btn btn-primary" onclick="return confirmDelete()">Delete</button>
                                 </div>
                             </td>
@@ -257,26 +259,26 @@
         </table>
 
         @* <nav aria-label="Page navigation">
-            <ul class="pagination">
-                <li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")">
-                    <a class="page-link" asp-page="./Product" asp-route-PageNumber="@(Model.PageNumber - 1)" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                @for (var i = 1; i <= Model.TotalPages; i++)
-                {
-                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                        <a class="page-link" asp-page="./Product" asp-route-PageNumber="@i">@i</a>
-                    </li>
-                }
-                <li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
-                    <a class="page-link" asp-page="./Product" asp-route-PageNumber="@(Model.PageNumber + 1)" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
+        <ul class="pagination">
+        <li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")">
+        <a class="page-link" asp-page="./Product" asp-route-PageNumber="@(Model.PageNumber - 1)" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        </a>
+        </li>
+        @for (var i = 1; i <= Model.TotalPages; i++)
+        {
+        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+        <a class="page-link" asp-page="./Product" asp-route-PageNumber="@i">@i</a>
+        </li>
+        }
+        <li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
+        <a class="page-link" asp-page="./Product" asp-route-PageNumber="@(Model.PageNumber + 1)" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        </a>
+        </li>
+        </ul>
         </nav> *@
-       
+
 
     </div>
 </div>
@@ -300,7 +302,7 @@
 <div class="modal fade" id="ProductModal" tabindex="-1" aria-labelledby="ProductModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form  id="Form" method="post">
+            <form id="Form" method="post">
                 @Html.AntiForgeryToken()
                 <div class="modal-header">
                     <h5 class="modal-title" id="ProductModalLabel">Product Transaction</h5>
@@ -323,7 +325,7 @@
                                         {
                                             foreach (var Category in Categories)
                                             {
-                                                    <option id="@Category.CategoryId">@Category.CategoryName</option>
+                                                <option id="@Category.CategoryId">@Category.CategoryName</option>
                                             }
                                         }
                                     </select>
@@ -341,8 +343,8 @@
                                         {
                                             foreach (var Discount in Discounts)
                                             {
-                                                    <option id="@Discount.DiscountId">@Discount.DiscountPercent</option>
-                                                
+                                                <option id="@Discount.DiscountId">@Discount.DiscountPercent</option>
+
                                             }
                                         }
                                     </select>
@@ -443,14 +445,14 @@
 @section scripts
 {
     <script type="text/javascript">
-          function confirmSave() {
-        return confirm("Are you sure you want to save changes?");
-    }
+        function confirmSave() {
+            return confirm("Are you sure you want to save changes?");
+        }
 
-    function confirmDelete() {
-        return confirm("Are you sure you want to delete this product?");
-    }
-        function enableRowEditing(button) {
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this product?");
+        }
+        function enableRowEditing(button, id) {
             // Tìm thẻ <tr> chứa nút "Edit" được nhấn
             const row = button.closest('tr');
 
@@ -466,31 +468,46 @@
                 select.disabled = false;
             });
             var a = document.getElementById('editbtn');
-            var b = document.getElementById('savebtn');
-            a.style.display = 'none';
+            var b = document.getElementById('savebtn_' + id);
+            button.style.display = 'none';
             b.style.display = 'inline-block';
         }
         function add() {
             $('#ProductModal').modal('show');
         }
-        
+
         function updateCategoryValue(id) {
-            var select = document.getElementById("categorySelect+"+id);
-            var input = document.getElementById("categoryIdInput+"+id);
+            var select = document.getElementById("categorySelect+" + id);
+            var input = document.getElementById("categoryIdInput+" + id);
             var selectedValue = select.options[select.selectedIndex].id;
             input.value = selectedValue;
         }
         function updateDiscountValue(id) {
-            var select = document.getElementById("discountSelect+"+id);
-            var input = document.getElementById("discountIdInput+"+id);
+            var select = document.getElementById("discountSelect+" + id);
+            var input = document.getElementById("discountIdInput+" + id);
             var selectedValue = select.options[select.selectedIndex].id;
             input.value = selectedValue;
         }
 
-        
+        window.onload = function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var searchProduct = urlParams.get('searchProduct');
+            var searchCategory = urlParams.get('searchCategory');
+            var searchDiscount = urlParams.get('searchDiscount');
+
+            if (searchProduct) {
+                document.getElementById("searchProduct").value = searchProduct;
+            }
+            if (searchCategory) {
+                document.getElementById("searchCategory").value = searchCategory;
+            }
+            if (searchDiscount) {
+                document.getElementById("searchDiscount").value = searchDiscount;
+            }
+        };
         document.addEventListener('DOMContentLoaded', function () {
             var message = '@Message';
-            
+
             function messshow() {
                 if (message != "") {
                     $('#MessageModal').modal('show');
@@ -523,12 +540,12 @@
         function checkDecimal(input) {
             if (isNaN(input.value) || parseFloat(input.value) != input.value) {
                 document.getElementById('error-msg').style.display = 'inline';
-                input.value = ''; 
+                input.value = '';
             } else {
                 document.getElementById('error-msg').style.display = 'none';
             }
         }
-        
+
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
