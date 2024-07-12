@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace MilkShopData.Models;
 
@@ -12,11 +13,7 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
         : base(options)
     {
     }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlServer("data source=PhamLeNhatHoang\\SQLEXPRESS;initial catalog=NET1702_PRN221_MilkShop;user id=sa;password=12345;Integrated Security=True;TrustServerCertificate=True");
-        base.OnConfiguring(optionsBuilder);
-    }
+   
     public NET1702_PRN221_MilkShopContext()
     {
 
@@ -35,6 +32,18 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
+    public static string GetConnectionString(string connectionStringName)
+    {
+        var config = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        string connectionString = config.GetConnectionString(connectionStringName);
+        return connectionString;
+    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection"));
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
