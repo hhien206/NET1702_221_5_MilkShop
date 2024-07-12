@@ -14,13 +14,13 @@ namespace MilkShopBussiness.Business
 {
     public interface IProductBusiness
     {
-        Task<IMilkShopResult> GetAll();
-        Task<IMilkShopResult> GetByIdNomall(int id);
-        Task<IMilkShopResult> GetProductByIdInclude(int id);
-        Task<IMilkShopResult> GetByName(string Product, string Category, string Discount);
-        Task<IMilkShopResult> Save(Product Product);
-        Task<IMilkShopResult> Update(Product Product);
-        Task<IMilkShopResult> DeleteById(int id);
+        Task<IBusinessResult> GetAll();
+        Task<IBusinessResult> GetByIdNomall(int id);
+        Task<IBusinessResult> GetProductByIdInclude(int id);
+        Task<IBusinessResult> GetByName(string Product, string Category, string Discount);
+        Task<IBusinessResult> Save(Product Product);
+        Task<IBusinessResult> Update(Product Product);
+        Task<IBusinessResult> DeleteById(int id);
     }
     public class ProductBusiness : IProductBusiness
     {
@@ -34,7 +34,7 @@ namespace MilkShopBussiness.Business
             _unitOfWork ??= new UnitOfWork();
         }
 
-        public async Task<IMilkShopResult> GetAll()
+        public async Task<IBusinessResult> GetAll()
         {
             try
             {
@@ -46,20 +46,20 @@ namespace MilkShopBussiness.Business
 
                 if (products == null)
                 {
-                    return new MilkShopResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
                 else
                 {
-                    return new MilkShopResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, products);
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, products);
                 }
             }
             catch (Exception ex)
             {
-                return new MilkShopResult(Const.ERROR_EXCEPTION, ex.Message);
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
 
-        public async Task<IMilkShopResult> GetProductByIdInclude(int id)
+        public async Task<IBusinessResult> GetProductByIdInclude(int id)
         {
             try
             {
@@ -71,19 +71,19 @@ namespace MilkShopBussiness.Business
 
                 if (Product == null)
                 {
-                    return new MilkShopResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
                 else
                 {
-                    return new MilkShopResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, Product);
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, Product);
                 }
             }
             catch (Exception ex)
             {
-                return new MilkShopResult(Const.ERROR_EXCEPTION, ex.Message);
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-        public async Task<IMilkShopResult> GetByIdNomall(int id)
+        public async Task<IBusinessResult> GetByIdNomall(int id)
         {
             try
             {
@@ -95,19 +95,19 @@ namespace MilkShopBussiness.Business
 
                 if (Product == null)
                 {
-                    return new MilkShopResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
                 else
                 {
-                    return new MilkShopResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, Product);
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, Product);
                 }
             }
             catch (Exception ex)
             {
-                return new MilkShopResult(Const.ERROR_EXCEPTION, ex.Message);
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-        public async Task<IMilkShopResult> GetByName(string Product, string Category, string Discount)
+        public async Task<IBusinessResult> GetByName(string Product, string Category, string Discount)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace MilkShopBussiness.Business
                 #endregion
                 //if (Discount != null && !double.TryParse(Discount, out double discountValue))
                 //{
-                //    return new MilkShopResult(Const.ERROR_EXCEPTION, "DiscountPercent is not a valid number");
+                //    return new BusinessResult(Const.ERROR_EXCEPTION, "DiscountPercent is not a valid number");
                 //    //throw new ArgumentException("DiscountPercent is not a valid number");
                 //}
                 //var products = await _unitOfWork.ProductRepository.GetProductByName(Product, Category, discountValue);
@@ -123,7 +123,7 @@ namespace MilkShopBussiness.Business
                 double discountValue = 0;
                 if (Discount != null && !double.TryParse(Discount, out  discountValue))
                 {
-                    return new MilkShopResult(Const.ERROR_EXCEPTION, "DiscountPercent is not a valid number");
+                    return new BusinessResult(Const.ERROR_EXCEPTION, "DiscountPercent is not a valid number");
                     //throw new ArgumentException("DiscountPercent is not a valid number");
                 }
                 var products = await _unitOfWork.ProductRepository.GetProductByName(Product, Category, discountValue);
@@ -131,20 +131,20 @@ namespace MilkShopBussiness.Business
 
                 if (products == null)
                 {
-                    return new MilkShopResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
                 else
                 {
-                    return new MilkShopResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, products);
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, products);
                 }
             }
             catch (Exception ex)
             {
-                return new MilkShopResult(Const.ERROR_EXCEPTION, ex.Message);
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
 
-        public async Task<IMilkShopResult> Save(Product Product)
+        public async Task<IBusinessResult> Save(Product Product)
         {
             try
             {
@@ -152,20 +152,20 @@ namespace MilkShopBussiness.Business
                 int result = await _unitOfWork.ProductRepository.CreateAsync(Product);
                 if (result > 0)
                 {
-                    return new MilkShopResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+                    return new BusinessResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
                 }
                 else
                 {
-                    return new MilkShopResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                    return new BusinessResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 }
             }
             catch (Exception ex)
             {
-                return new MilkShopResult(Const.ERROR_EXCEPTION, ex.ToString());
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.ToString());
             }
         }
 
-        public async Task<IMilkShopResult> Update(Product Product)
+        public async Task<IBusinessResult> Update(Product Product)
         {
             try
             {
@@ -174,20 +174,20 @@ namespace MilkShopBussiness.Business
 
                 if (result > 0)
                 {
-                    return new MilkShopResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+                    return new BusinessResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
                 }
                 else
                 {
-                    return new MilkShopResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                    return new BusinessResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 }
             }
             catch (Exception ex)
             {
-                return new MilkShopResult(-4, ex.ToString());
+                return new BusinessResult(-4, ex.ToString());
             }
         }
 
-        public async Task<IMilkShopResult> DeleteById(int id)
+        public async Task<IBusinessResult> DeleteById(int id)
         {
             try
             {
@@ -199,21 +199,21 @@ namespace MilkShopBussiness.Business
                     var result = await _unitOfWork.ProductRepository.RemoveAsync(Product);
                     if (result)
                     {
-                        return new MilkShopResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+                        return new BusinessResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
                     }
                     else
                     {
-                        return new MilkShopResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+                        return new BusinessResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
                     }
                 }
                 else
                 {
-                    return new MilkShopResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return new BusinessResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
             }
             catch (Exception ex)
             {
-                return new MilkShopResult(-4, ex.ToString());
+                return new BusinessResult(-4, ex.ToString());
             }
         }
 

@@ -5,6 +5,8 @@ using MilkShopBusiness.Base;
 using MilkShopData;
 using MilkShopData.Models;
 using System.Linq;
+using MilkShopBusiness.Business;
+using MilkShopData.DTO;
 
 
 namespace MilkShopRazorWebApp.Pages
@@ -26,7 +28,7 @@ namespace MilkShopRazorWebApp.Pages
         public Discount Discount { get; set; } = default;
         public Category Category { get; set; } = default;
         public List<Product> Products { get; set; } = new List<Product>();
-        public List<Discount> Discounts { get; set; } = new List<Discount>();
+        public List<DiscountDTO> Discounts { get; set; } = new List<DiscountDTO>();
         public List<Category> Categories { get; set; } = new List<Category>();
         public int PageNumber { get; set; }
 
@@ -140,7 +142,7 @@ namespace MilkShopRazorWebApp.Pages
 
             return new List<Category>();
         }
-        private List<Discount> GetDiscount()
+        private List<DiscountDTO> GetDiscount()
         {
             
             var discountResult = _discountBusiness.GetAll();
@@ -148,11 +150,11 @@ namespace MilkShopRazorWebApp.Pages
 
             if (discountResult.Status > 0 && discountResult.Result.Data != null)
             {
-                var Discounts = (List<Discount>)discountResult.Result.Data;
+                var Discounts = (List<DiscountDTO>)discountResult.Result.Data;
                 return Discounts;
             }
 
-            return new List<Discount>();
+            return new List<DiscountDTO>();
         }
 
         private void Search(string Product, string Category, string Discount, int pageNumber)
