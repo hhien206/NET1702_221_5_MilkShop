@@ -19,7 +19,7 @@ public partial class Customer
 
     public string PhoneNumber { get; set; }
 
-    public DateTime? Dob { get; set; }
+    public DateOnly? Dob { get; set; }
 
     public bool? Gender { get; set; }
 

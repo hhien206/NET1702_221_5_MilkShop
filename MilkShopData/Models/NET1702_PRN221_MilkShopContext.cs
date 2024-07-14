@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 
 namespace MilkShopData.Models;
@@ -17,6 +18,24 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
     public NET1702_PRN221_MilkShopContext()
     {
 
+    }
+
+    public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>
+    {
+        /// <summary>
+        /// Creates a new instance of this converter.
+        /// </summary>
+        public DateOnlyConverter() : base(
+            d => d.ToDateTime(TimeOnly.MinValue),
+            d => DateOnly.FromDateTime(d))
+        { }
+    }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder builder)
+    {
+        builder.Properties<DateOnly>()
+               .HaveConversion<DateOnlyConverter>()
+               .HaveColumnType("date");
     }
 
 
