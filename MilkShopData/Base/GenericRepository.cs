@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MilkShopData.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MilkShop.common;
 
 namespace MilkShopData.Base
 {
@@ -137,5 +139,9 @@ namespace MilkShopData.Base
         {
             return await _dbSet.FindAsync(code);
         }
+
+
+
+
     }
 }
