@@ -91,7 +91,7 @@
                             <td>
                                 <div class="col-md-12">
                                     <label for="ParentCategoryID"></label>
-                                    <input asp-for="category.ParentCategoryId" class="form-control" value="@category.ParentCategoryId" />
+                                    <input asp-for="category.ParentCategoryId" class="form-control" value="@category.ParentCategoryId" readonly="true" />
                                 </div>
                             </td>
                             <td>
@@ -115,7 +115,7 @@
                             <td>
                                 <div class="col-md-12">
                                     <label for="SortOrder"></label>
-                                    <input asp-for="category.SortOrder" class="form-control" value="@category.SortOrder" />
+                                    <input asp-for="category.SortOrder" class="form-control" value="@category.SortOrder" readonly="true" />
                                 </div>
                             </td>
                             <td>@category.CreatedDate </td>

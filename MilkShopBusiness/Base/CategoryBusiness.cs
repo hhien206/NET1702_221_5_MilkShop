@@ -117,13 +117,13 @@ namespace MilkShopBusiness.Base
 
         public async Task<IMilkShopResult> Update(Category Category)
         {
-            Category.UpdatedDate = DateTime.Now;
             Category categoryy = _unitOfWork.CategoryRepository.GetById(Category.CategoryId);
             categoryy.CategoryName = Category.CategoryName;
             categoryy.Type = Category.Type;
             categoryy.Description = Category.Description;
             categoryy.ImageUrl = Category.ImageUrl;
             categoryy.MetaKeywords = Category.MetaKeywords;
+            categoryy.UpdatedDate = DateTime.Now;
             int result = await _unitOfWork.CategoryRepository.UpdateAsync(categoryy);
 
             if (result > 0)
