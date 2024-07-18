@@ -1,23 +1,88 @@
 ﻿@page
 @model MilkShopRazorWebApp.Pages.CategoryModel
 @{
-    ViewData["Title"] = "Category page";
+    ViewData["Title"] = "Category Page";
     var Categories = Model.categories;
 }
-<div class="text-center">
+
+<style>
+    body {
+        background-color: #f8f9fa; /* Light background color */
+    }
+
+    .table-header {
+        background-color: #007bff; /* Bootstrap primary color */
+        color: white;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 5px rgba(0, 123, 255, .5); /* Add focus shadow */
+        border-color: #007bff; /* Change border color on focus */
+    }
+
+    .btn-custom {
+        transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+    }
+
+        .btn-custom:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+            color: white; /* Change text color on hover */
+        }
+
+    .modal-header {
+        background-color: #007bff; /* Bootstrap primary color for modal */
+        color: white;
+    }
+
+    .modal-footer .btn {
+        width: 100px; /* Consistent button width */
+    }
+
+    .no-categories {
+        text-align: center;
+        color: #6c757d; /* Muted text color */
+    }
+
+    /* Custom input field sizes */
+    .small-input {
+        width: 80px; /* Adjust the width as needed */
+    }
+
+    .medium-input {
+        width: 120px; /* For status or similar fields */
+    }
+
+    .large-input {
+        width: 200px; /* For name, description, and keywords */
+    }
+
+    .full-width {
+        width: 100%; /* Full-width for larger fields */
+    }
+</style>
+
+<div class="text-center mb-4">
     <h1 class="display-6">Category Management</h1>
 </div>
 
-<div class="row">
+<!-- Display the message -->
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-warning">
+        @Model.Message
+    </div>
+}
+
+<div class="row mb-3">
     <div class="col-md-12 text-end">
-        <button type="button" class="btn btn-primary" onclick="add();">
-            Add
+        <button type="button" class="btn btn-outline-primary btn-custom" onclick="add();">
+            Add New Category
         </button>
     </div>
 </div>
 
 <!-- Search Form -->
-<div class="row">
+<div class="row mb-3">
     <div class="col-md-12">
         <form method="get">
             <div class="form-group row">
@@ -40,105 +105,83 @@
 
 <div class="row">
     <div class="col-md-12">
-        <table class="table table-striped table-bordered table-hover">
-            <thead>
-                <tr class="card-header">
-                    <th class="card-title text-center">Id</th>
-                    <th class="card-title text-center">Name</th>
-                    <th class="card-title text-center">Type</th>
-                    <th class="card-title text-center">Description</th>
-                    <th class="card-title text-center">ParentCategoryID</th>
-                    <th class="card-title text-center">ImageURL</th>
-                    <th class="card-title text-center">MetaKeywords</th>
-                    <th class="card-title text-center">Status</th>
-                    <th class="card-title text-center">SortOrder</th>
-                    <th class="card-title text-center">CreatedDate</th>
-                    <th class="card-title text-center">UpdatedDate</th>
-                    <th class="card-title text-center"></th>
+        <table class="table table-striped table-bordered table-hover table-responsive">
+            <thead class="table-header">
+                <tr>
+                    <th class="text-center">Category ID</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Type</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">Parent Category ID</th>
+                    <th class="text-center">Image URL</th>
+                    <th class="text-center">Meta Keywords</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Sort Order</th>
+                    <th class="text-center">Created Date</th>
+                    <th class="text-center">Updated Date</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
-            <tbody class="tblcurrencyList">
+            <tbody>
                 @if (Categories.Count > 0)
                 {
                     foreach (var category in Categories)
                     {
-                        <form method="post">
                         <tr>
+                            <form method="post">
                             <td>
-                                <div class="col-md-12">
-                                    <label for="CategoryId"></label>
-                                    <input asp-for="category.CategoryId" class="form-control" value="@category.CategoryId" readonly="true" />
-                                </div>
+                                <input asp-for="category.CategoryId" class="form-control small-input" value="@category.CategoryId" readonly="true" />
                             </td>
                             <td>
-                                <div class="col-md-12">
-                                    <label for="CategoryName"></label>
-                                    <input asp-for="category.CategoryName" class="form-control" value="@category.CategoryName" />
-                                </div>
+                                <input asp-for="category.CategoryName" class="form-control large-input" value="@category.CategoryName" />
                             </td>
                             <td>
-                                <div class="col-md-12">
-                                    <label for="Type"></label>
-                                    <input asp-for="category.Type" class="form-control" value="@category.Type" />
-                                </div>
+                                <input asp-for="category.Type" class="form-control large-input" value="@category.Type" />
                             </td>
                             <td>
-                                <div class="col-md-12">
-                                    <label for="Description"></label>
-                                    <input asp-for="category.Description" class="form-control" value="@category.Description" />
-                                </div>
+                                <input asp-for="category.Description" class="form-control full-width" value="@category.Description" />
                             </td>
                             <td>
-                                <div class="col-md-12">
-                                    <label for="ParentCategoryID"></label>
-                                    <input asp-for="category.ParentCategoryId" class="form-control" value="@category.ParentCategoryId" readonly="true" />
-                                </div>
+                                <input asp-for="category.ParentCategoryId" class="form-control small-input" value="@category.ParentCategoryId" readonly="true" />
                             </td>
                             <td>
-                                <div class="col-md-12">
-                                    <label for="ImageURL"></label>
-                                    <input asp-for="category.ImageUrl" class="form-control" value="@category.ImageUrl" />
-                                </div>
+                                <input asp-for="category.ImageUrl" class="form-control large-input" value="@category.ImageUrl" />
                             </td>
                             <td>
-                                <div class="col-md-12">
-                                    <label for="MetaKeywords"></label>
-                                    <input asp-for="category.MetaKeywords" class="form-control" value="@category.MetaKeywords" />
-                                </div>
+                                <input asp-for="category.MetaKeywords" class="form-control full-width" value="@category.MetaKeywords" />
                             </td>
                             <td>
-                                <div class="col-md-12">
-                                    <label for="Status"></label>
-                                    <input asp-for="category.Status" class="form-control" value="@category.Status" readonly="true" />
-                                </div>
+                                <input asp-for="category.Status" class="form-control medium-input" value="@category.Status" readonly="true" />
                             </td>
                             <td>
-                                <div class="col-md-12">
-                                    <label for="SortOrder"></label>
-                                    <input asp-for="category.SortOrder" class="form-control" value="@category.SortOrder" readonly="true" />
-                                </div>
+                                <input asp-for="category.SortOrder" class="form-control small-input" value="@category.SortOrder" readonly="true" />
                             </td>
-                            <td>@category.CreatedDate </td>
-                            <td>@category.UpdatedDate </td>
+                            <td>@category.CreatedDate</td>
+                            <td>@category.UpdatedDate</td>
                             <td>
-                                <button asp-page-handler="Update" id="btUpdate" type="submit" class="btn btn-primary">Update</button>
+                                <button asp-page-handler="Update" type="submit" class="btn btn-outline-primary btn-custom">Update</button>
+                                <button asp-page-handler="Delete" type="submit" class="btn btn-outline-danger btn-custom" onclick="return confirmDelete();">Delete</button>
                             </td>
-                            <td>
-                                <button asp-page-handler="Delete" id="btDelete" type="submit" class="btn btn-primary">Delete</button>
-                            </td>
+                            </form>
                         </tr>
-                        </form>
                     }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="12" class="no-categories">No categories found.</td>
+                    </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
 
+
 <div class="modal fade" id="currencyModal" tabindex="-1" aria-labelledby="currencyModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "frm", id = "frm" }))
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frm" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="modal-header">
@@ -151,51 +194,43 @@
                         <div class="col-md-12">
                             <div class="form-group row">
                                 <div class="col-md-6">
-                                    <label for="1">CategoryName</label>
-                                    <input asp-for="category.CategoryName" class="form-control" />
+                                    <label for="CategoryName">Category Name</label>
+                                    <input asp-for="category.CategoryName" class="form-control" required />
                                 </div>
-                                <div class="form-group row">
-                                    <div class="col-md-6">
-                                        <label for="1">Type</label>
-                                        <input asp-for="category.Type" class="form-control" />
-                                    </div>
+                                <div class="col-md-6">
+                                    <label for="Type">Type</label>
+                                    <input asp-for="category.Type" class="form-control" required />
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-12">
                             <div class="form-group row">
                                 <div class="col-md-6">
-                                    <label for="1">Description</label>
+                                    <label for="Description">Description</label>
                                     <input asp-for="category.Description" class="form-control" />
                                 </div>
-                            </div>
-                            <div class="form-group row">
                                 <div class="col-md-6">
-                                    <label for="1">ParentCategoryID</label>
+                                    <label for="ParentCategoryId">Parent Category ID</label>
                                     <input asp-for="category.ParentCategoryId" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-6">
-                                    <label for="1">ImageURL</label>
+                                    <label for="ImageUrl">Image URL</label>
                                     <input asp-for="category.ImageUrl" class="form-control" />
                                 </div>
-                            </div>
-                            <div class="form-group row">
                                 <div class="col-md-6">
-                                    <label for="1">MetaKeywords</label>
+                                    <label for="MetaKeywords">Meta Keywords</label>
                                     <input asp-for="category.MetaKeywords" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-6">
-                                    <label for="1">SortOrder</label>
-                                    <input asp-for="category.SortOrder" class="form-control" />
+                                    <label for="SortOrder">Sort Order</label>
+                                    <input asp-for="category.SortOrder" class="form-control" required />
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-12">
-                            <label>@Model.Message</label>
+                            <div class="col-md-12">
+                                <label class="text-danger">@Model.Message</label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -208,99 +243,15 @@
     </div>
 </div>
 
-@* <div class="modal fade" id="update" tabindex="-1" aria-labelledby="currencyModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "frm", id = "frm" }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="modal-header">
-                    <h5 class="modal-title" id="currencyModalLabel">Category Transaction</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="currencyModalContent"></div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">CategoryId</label>
-                                    <input asp-for="category.CategoryId" class="form-control" />
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="1">CategoryName</label>
-                                    <input asp-for="category.CategoryName" class="form-control" />
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-md-6">
-                                        <label for="1">Type</label>
-                                        <input asp-for="category.Type" class="form-control" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">Description</label>
-                                    <input asp-for="category.Description" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">ParentCategoryID</label>
-                                    <input asp-for="category.ParentCategoryId" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">ImageURL</label>
-                                    <input asp-for="category.ImageUrl" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">MetaKeywords</label>
-                                    <input asp-for="category.MetaKeywords" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">Status</label>
-                                    <input asp-for="category.Status" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">SortOrder</label>
-                                    <input asp-for="category.SortOrder" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label for="1">CreatedDate</label>
-                                    <input asp-for="category.CreatedDate" class="form-control" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <label>@Model.Message</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="btSave" type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            }
-        </div>
-    </div>
-</div> *@
 @section scripts
 {
     <script type="text/javascript">
         function add() {
             $('#currencyModal').modal('show');
+        }
+
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this category?");
         }
     </script>
 }
