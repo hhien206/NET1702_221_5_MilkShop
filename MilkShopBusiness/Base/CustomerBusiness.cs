@@ -146,6 +146,29 @@ namespace MilkShopBusiness.Base
         }
 
 
+        public async Task<IMilkShopResult> DeleteAsync(int id)
+        {
+            try
+            {
+                var customer = await _unitOfWork.CustomerRepository.GetByIdAsync(id);
+                if (customer != null)
+                {
+                    var result = await _unitOfWork.CustomerRepository.RemoveAsync(customer);
+                    if (result)
+                        return new MilkShopResult(1, "success");
+                    else
+                        return new MilkShopResult(0, "error");
+                }
+                return new MilkShopResult(0, "no content");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
         public async Task<IMilkShopResult> SearchCustomer(string value, int? pageIndex, int pageSize)
         {
             var customer = await _unitOfWork.CustomerRepository.SearchCustomer(value, pageIndex, pageSize);

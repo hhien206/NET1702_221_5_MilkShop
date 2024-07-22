@@ -213,6 +213,58 @@
                             </div>
                         </div>
                         <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label for="1">Address</label>
+                                    <input asp-for="Customer.Address" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label for="1">Phone</label>
+                                    <input asp-for="Customer.PhoneNumber" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label for="1">Birthday</label>
+                                    <input asp-for="Customer.Dob" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label for="1">Gender</label>
+                                    @* <input asp-for="Customer.Gender" class="form-control" /> *@
+                                    <select asp-for="Customer.Gender" class="form-control" asp-items="ViewBag.Gender">
+                                        <option value="True" >Male</option>
+                                        <option value="False">Female</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label for="1">Point</label>
+                                    <input asp-for="Customer.Point" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label for="1">Status</label>
+                                    <input asp-for="Customer.Status" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
                             <label>@Model.Message</label>
                         </div>
                     </div>
