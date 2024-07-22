@@ -2,40 +2,28 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Configuration;
 
 namespace MilkShopData.Models;
 
 public partial class NET1702_PRN221_MilkShopContext : DbContext
 {
-    public NET1702_PRN221_MilkShopContext()
-    {
-    }
-
     public NET1702_PRN221_MilkShopContext(DbContextOptions<NET1702_PRN221_MilkShopContext> options)
         : base(options)
     {
     }
-
-
-
-    public virtual DbSet<Category> Categories { get; set; }
-
-    public virtual DbSet<Customer> Customers { get; set; }
-
-    public virtual DbSet<Discount> Discounts { get; set; }
-
-    public virtual DbSet<Order> Orders { get; set; }
-
-    public virtual DbSet<OrderDetail> OrderDetails { get; set; }
-
-    public virtual DbSet<Product> Products { get; set; }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+   
+    public NET1702_PRN221_MilkShopContext(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer("data source=w4v3\\SQL2019;initial catalog=NET1702_PRN221_MilkShop;user id=sa;password=12345;Integrated Security=True;TrustServerCertificate=True");
         base.OnConfiguring(optionsBuilder);
+
+    }
+
+    public NET1702_PRN221_MilkShopContext()
+    {
     }
 
     public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>
@@ -55,23 +43,58 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
                .HaveConversion<DateOnlyConverter>()
                .HaveColumnType("date");
     }
+
+
+    public virtual DbSet<Category> Categories { get; set; }
+
+    public virtual DbSet<Customer> Customers { get; set; }
+
+    public virtual DbSet<Discount> Discounts { get; set; }
+
+    public virtual DbSet<Order> Orders { get; set; }
+
+    public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+
+    public virtual DbSet<Product> Products { get; set; }
+
+    public static string GetConnectionString(string connectionStringName)
+    {
+        var config = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        string connectionString = config.GetConnectionString(connectionStringName);
+        return connectionString;
+    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection"));
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
         {
             entity.HasKey(e => e.CategoryId).HasName("Category_pk");
 
-            entity.ToTable("Category");
+            entity.ToTable("Category", tb => tb.HasTrigger("trgUpdateCategory"));
+
             entity.Property(e => e.CategoryName).HasMaxLength(250);
-            entity.Property(e => e.Type).HasMaxLength(250);
+            entity.Property(e => e.CreatedDate).HasColumnType("date");
             entity.Property(e => e.Description).HasColumnType("text");
-            entity.Property(e => e.ParentCategoryID).HasColumnName("ParentCategoryId");
-            entity.Property(e => e.ImageURL).HasMaxLength(255).HasColumnName("ImageURL");
-            entity.Property(e => e.MetaKeywords).HasMaxLength(255);       
-            entity.Property(e => e.Status).HasColumnType("tinyint");
-            entity.Property(e => e.SortOrder).HasColumnType("int");
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("ImageURL");
+            entity.Property(e => e.MetaKeywords)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.ParentCategoryId).HasColumnName("ParentCategoryID");
+            entity.Property(e => e.Status).HasDefaultValueSql("((1))");
+            entity.Property(e => e.Type).HasMaxLength(250);
+            entity.Property(e => e.UpdatedDate).HasColumnType("date");
+
+            entity.HasOne(d => d.ParentCategory).WithMany(p => p.InverseParentCategory)
+                .HasForeignKey(d => d.ParentCategoryId)
+                .HasConstraintName("FK_ParentCategoryID");
         });
 
         modelBuilder.Entity<Customer>(entity =>
@@ -80,15 +103,17 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
 
             entity.ToTable("Customer");
 
-            entity.Property(e => e.AccountId).HasColumnName("AccountId");
-            entity.Property(e => e.Name).HasMaxLength(100).HasColumnName("Name");
-            entity.Property(e => e.Email).HasMaxLength(250).HasColumnName("Email");
-            entity.Property(e => e.Address).HasMaxLength(500).HasColumnName("Address");
-            entity.Property(e => e.PhoneNumber).HasMaxLength(20).IsUnicode(false);
-            entity.Property(e => e.Dob).HasColumnName("DOB");
-            entity.Property(e => e.Gender).HasColumnName("Gender");
-            entity.Property(e => e.Point).HasColumnName("Point");
-            entity.Property(e => e.Status).HasMaxLength(20).HasColumnName("Status");
+            entity.Property(e => e.AccountId).HasColumnName("AccountID");
+            entity.Property(e => e.Address).HasMaxLength(500);
+            entity.Property(e => e.Dob)
+                .HasColumnType("date")
+                .HasColumnName("DOB");
+            entity.Property(e => e.Email).HasMaxLength(250);
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.PhoneNumber)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Status).HasMaxLength(20);
         });
 
         modelBuilder.Entity<Discount>(entity =>
@@ -110,7 +135,11 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
 
             entity.Property(e => e.Address).HasMaxLength(250);
             entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
-            entity.Property(e => e.NameReceiver).HasMaxLength(1);
+            entity.Property(e => e.DateCreate).HasColumnType("date");
+            entity.Property(e => e.DateUpdate).HasColumnType("date");
+            entity.Property(e => e.NameReceiver)
+                .HasMaxLength(200)
+                .IsFixedLength();
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(20)
                 .IsUnicode(false);

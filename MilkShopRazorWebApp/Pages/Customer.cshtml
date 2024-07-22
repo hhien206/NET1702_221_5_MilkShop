@@ -9,26 +9,38 @@
     <h1 class="display-6">Custommer Management</h1>
 </div>
 
-<div class="row">
-    <div class="col-md-12 text-end">
-        <button type="button" class="btn btn-primary" onclick="add();">
-            Add
-        </button>
-    </div>
-</div>
 
 <div style="margin-top: 30px">
     <div>
         <form method="get" class="form-inline mb-3">
             <div class="input-group">
-                <input type="text" class="form-control" asp-for="Search" placeholder="Search" />
+                <div>
+                    <input type="text" class="form-control" asp-for="nameSearch" placeholder="Name" />
+                </div>
+                
+                <div>
+                    <input type="text" class="form-control" asp-for="emailSearch" placeholder="Email" />
+                </div>
+
+                <div>
+                    <input type="text" class="form-control" asp-for="addressSearch" placeholder="Address" />
+                </div>
+                
+                
                 <div class="input-group-append">
                     <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="button" class="btn btn-primary" onclick="add();">
+                        Add
+                    </button>
                 </div>
+                
             </div>
         </form>
+
+        
         
     </div>
+
 </div>
 
 
