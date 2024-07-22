@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MilkShop.common;
 using MilkShopData.Models;
 using System;
 using System.Collections;
@@ -8,7 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using MilkShop.common;
 
 namespace MilkShopData.Base
 {
@@ -83,20 +82,6 @@ namespace MilkShopData.Base
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> AddCustomerAsync(Customer customer)
-        {
-            await _context.Customers.AddAsync(customer);
-            return await _context.SaveChangesAsync();
-        }
-
-        
-        public async Task<int> UpdateCustomerAsync(Customer customer)
-        {
-            var tracker = _context.Update(customer);
-            tracker.State = EntityState.Modified;
-            return await _context.SaveChangesAsync();
-        }
-
         public async Task<int> CreateAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
@@ -106,8 +91,7 @@ namespace MilkShopData.Base
         public void Update(T entity)
         {
             var tracker = _context.Attach(entity);
-            //tracker.State = EntityState.Modified;
-            _context.Entry(entity).State = EntityState.Modified;
+            tracker.State = EntityState.Modified;
             _context.SaveChanges();
         }
 
@@ -158,40 +142,6 @@ namespace MilkShopData.Base
 
 
 
-        public async Task<List<Customer>> SearchCustomer(string value, int? pageIndex, int pageSize)
-        {
-            value = value.Trim().ToLower();
-            DateOnly dateValue;
-            bool isValidDate = DateOnly.TryParse(value, out dateValue);
 
-            var customersQuery = _context.Customers
-                                        .OrderByDescending(m => m.CustomerId)
-                                        .Where(m =>
-
-                                            m.Name.Contains(value) ||
-                                            m.Email.Contains(value) ||
-                                            m.Address.Contains(value) ||
-                                            m.PhoneNumber.Contains(value));
-
-            var paginatedCustomers = await PaginatedList<Customer>.CreateAsync(customersQuery.AsNoTracking(), pageIndex ?? 1, pageSize);
-            return paginatedCustomers;
-        }
-
-        public bool CustomerExisted(int id)
-        {
-            return _context.Customers.Any(e => e.CustomerId == id);
-        }
-
-        public IEnumerable GetAllMentor()
-        {
-            return _context.Customers;
-        }
-
-        public async Task<PaginatedList<Customer>> GetCustomerPagingAsync(int? pageIndex, int pageSize)
-        {
-            var paginatedCustomer = await PaginatedList<Customer>.CreateAsync(
-                _context.Customers.AsNoTracking().OrderByDescending(m => m.CustomerId), pageIndex ?? 1, pageSize);
-            return paginatedCustomer;
-        }
     }
 }

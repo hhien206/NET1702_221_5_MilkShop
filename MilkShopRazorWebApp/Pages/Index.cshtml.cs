@@ -12,9 +12,14 @@ namespace MilkShopRazorWebApp.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
-
+            if(HttpContext.Session.GetString("Role") == "1")
+            {
+                return Page();
+            }
+            TempData["Message"] = "You do not have permission to do this function!";
+            return RedirectToPage("/Login");
         }
     }
 }

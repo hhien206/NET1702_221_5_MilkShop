@@ -1,0 +1,126 @@
+﻿@page
+@model MilkShopRazorWebApp.Pages.DicountPage.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            margin: 50px auto;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        textarea.form-control {
+            height: 100px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: #5bbede;
+            border-color: #5bbede;
+        }
+
+            .btn-primary:hover {
+                background-color: #4aa7c3;
+                border-color: #4aa7c3;
+            }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="form-header">Create Discount</h1>
+        <hr />
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger text-center mb-3"></div>
+            <div class="form-group">
+                <label asp-for="Discount.DiscountPercent" class="control-label"></label>
+                <input asp-for="Discount.DiscountPercent" class="form-control form-control-sm" />
+                <span asp-validation-for="Discount.DiscountPercent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discount.FromDate" class="control-label"></label>
+                <input asp-for="Discount.FromDate" class="form-control form-control-sm" type="date" />
+                <span asp-validation-for="Discount.FromDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discount.ToDate" class="control-label"></label>
+                <input asp-for="Discount.ToDate" class="form-control form-control-sm" type="date" />
+                <span asp-validation-for="Discount.ToDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discount.Status" class="control-label"></label>
+                <input asp-for="Discount.Status" class="form-control form-control-sm" />
+                <span asp-validation-for="Discount.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discount.Condition" class="control-label"></label>
+                <input asp-for="Discount.Condition" class="form-control form-control-sm" />
+                <span asp-validation-for="Discount.Condition" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discount.Type" class="control-label"></label>
+                <input asp-for="Discount.Type" class="form-control form-control-sm" />
+                <span asp-validation-for="Discount.Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discount.Description" class="control-label"></label>
+                <textarea asp-for="Discount.Description" class="form-control form-control-sm"></textarea>
+                <span asp-validation-for="Discount.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discount.DiscountCode" class="control-label"></label>
+                <input asp-for="Discount.DiscountCode" class="form-control form-control-sm" />
+                <span asp-validation-for="Discount.DiscountCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discount.UsageLimit" class="control-label"></label>
+                <input asp-for="Discount.UsageLimit" class="form-control form-control-sm" />
+                <span asp-validation-for="Discount.UsageLimit" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-6 text-center text-sm-start">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+                <div class="col-sm-6 text-center text-sm-end">
+                    <a asp-page="Index" class="btn btn-secondary">Back</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</body>
+</html>

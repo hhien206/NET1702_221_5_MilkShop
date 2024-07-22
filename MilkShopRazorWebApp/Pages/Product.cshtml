@@ -1,0 +1,556 @@
+﻿@page
+@model MilkShopRazorWebApp.Pages.ProductModel
+@{
+    ViewData["Title"] = "Product category page";
+    var Products = Model.Products;
+    var Categories = Model.Categories;
+    var Discounts = Model.Discounts;
+    var Message = Model.Message;
+}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<div class="text-center">
+    <h1 class="display-6">Product management</h1>
+</div>
+<div class="ps-5 ms-5">
+    <div class="d-flex mt-2">
+
+        <div class="mx-3">
+            <div>
+                <input id="searchProduct" type="text" style="border-radius: 3px; border: 1px solid #dfe0e2;" class="px-2" placeholder="Product Name" />
+                <input id="searchCategory" type="text" style="border-radius: 3px; border: 1px solid #dfe0e2;" class="px-2" placeholder="Category Name" />
+                <input id="searchDiscount" type="text" style="border-radius: 3px; border: 1px solid #dfe0e2;" class="px-2" placeholder="Discount Percent" />
+                <button class="px-2 py-1 border-0" style="background-color: #5bbede;
+                    color: #fff; border-radius: 5px" onclick="searchProducts()">
+                    Search
+                </button>
+                <button type="button" class="px-2 py-1 border-0" style="background-color: #5bbede; color: #fff; border-radius: 5px " onclick="add();">
+                    Add
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="spacer my-4"></div>
+<style>
+    #MessageModal .modal-content {
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #MessageModal .modal-header {
+        text-align: center;
+        border-bottom: none;
+    }
+
+    #MessageModal .modal-footer {
+        border-top: none;
+        justify-content: center;
+    }
+
+    #MessageModal .modal-title {
+        width: 100%;
+        text-align: center;
+        font-size: 1.5rem;
+        color: #343a40;
+    }
+
+    #MessageModal .btn-custom {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+    }
+
+    table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+    .btn-edit {
+        display: flex;
+        margin-top: 25px;
+        column-gap: 5px;
+    }
+
+    th, td {
+        border: 1px solid black;
+        text-align: center;
+        width: calc(100% / 14); /* Assuming there are 14 columns */
+        word-wrap: break-word; /* To handle long text */
+    }
+</style>
+<div class="row" style="display: flex;width: 2150px; align-items: center; margin-left: -420px;">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered table-hover equal-width-table">
+            <thead>
+                <tr class="card-header">
+
+                    <th class="card-title text-center">Name</th>
+                    <th class="card-title text-center">Category</th>
+                    <th class="card-title text-center">Discount</th>
+                    <th class="card-title text-center">Description</th>
+                    <th class="card-title text-center">Price</th>
+                    <th class="card-title text-center">Quantity</th>
+                    <th class="card-title text-center">Brand</th>
+                    <th class="card-title text-center">Origin</th>
+                    <th class="card-title text-center">Weight</th>
+                    <th class="card-title text-center">Date of Manufacture</th>
+                    <th class="card-title text-center">Expiration Date</th>
+                    <th class="card-title text-center">Warning</th>
+                    <th class="card-title text-center">Producer</th>
+                    <th class="card-title text-center">Status</th>
+                    <th class="card-title text-center">Action</th>
+
+                </tr>
+            </thead>
+            <tbody class="tblProductList" id="tblProductList">
+                @if (Products.Count > 0)
+                {
+                    foreach (var Product in Products)
+                    {
+                        <tr>
+                            <form id="Form" method="post">
+
+                            <td style="display: none">
+                                <div class="col-md-12">
+                                    <label for="Product_ProductId"></label>
+                                    <input asp-for="Product.ProductId" type="hidden" class="form-control" value="@Product.ProductId" readonly="true" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_Name"></label>
+                                    <input asp-for="Product.Name" class="form-control" value="@Product.Name" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_CategoryId"></label>
+                                    <select id="categorySelect+@Product.ProductId" class="form-control" asp-items="ViewBag.Categories" onchange="updateCategoryValue(@Product.ProductId)" disabled>
+                                            @if (Categories.Count > 0)
+                                            {
+                                                foreach (var Category in Categories)
+                                                {
+                                                    @if (Product.Category.CategoryName == Category.CategoryName)
+                                                    {
+                                                    <option id="@Category.CategoryId" selected="selected">@Category.CategoryName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                    <option id="@Category.CategoryId">@Category.CategoryName</option>
+                                                    }
+                                                }
+                                            }
+                                    </select>
+                                    <input style="display: none" id="categoryIdInput+@Product.ProductId" asp-for="Product.CategoryId" class="form-control" value="@Product.CategoryId" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_DiscountId"></label>
+                                    <select id="discountSelect+@Product.ProductId" class="form-control" asp-items="ViewBag.Discount" onchange="updateDiscountValue(@Product.ProductId)" disabled>
+                                            @if (Discounts.Count > 0)
+                                            {
+                                                foreach (var Discount in Discounts)
+                                                {
+                                                    @if (Product.Discount.DiscountPercent == Discount.DiscountPercent)
+                                                    {
+                                                    <option selected="selected" id="@Discount.DiscountId">@Discount.DiscountPercent</option>
+                                                    }
+                                                    else
+                                                    {
+                                                    <option id="@Discount.DiscountId">@Discount.DiscountPercent</option>
+                                                    }
+                                                }
+                                            }
+                                    </select>
+                                    <input style="display: none" id="discountIdInput+@Product.ProductId" asp-for="Product.DiscountId" class="form-control" value="@Product.DiscountId" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_Description"></label>
+                                    <input asp-for="Product.Description" class="form-control" value="@Product.Description" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_Price"></label>
+                                    <input asp-for="Product.Price" class="form-control" value="@Product.Price" type="number" step="0.01" oninput="checkDecimal(this)" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_Quantity"></label>
+                                    <input asp-for="Product.Quantity" class="form-control" value="@Product.Quantity" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_Brand"></label>
+                                    <input asp-for="Product.Brand" class="form-control" value="@Product.Brand" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_Origin"></label>
+                                    <input asp-for="Product.Origin" class="form-control" value="@Product.Origin" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_Weight"></label>
+                                    <input asp-for="Product.Weight" class="form-control" value="@Product.Weight" type="number" step="0.01" oninput="checkDecimal(this)" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_DateOfManufacture"></label>
+                                    <input asp-for="Product.DateOfManufacture" class="form-control" value="@Product.DateOfManufacture?.ToString("yyyy-MM-dd")" type="date" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_ExpirationDate"></label>
+                                    <input asp-for="Product.ExpirationDate" class="form-control" value="@Product.ExpirationDate?.ToString("yyyy-MM-dd")" type="date" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_Warning"></label>
+                                    <input asp-for="Product.Warning" class="form-control" value="@Product.Warning" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_Producer"></label>
+                                    <input asp-for="Product.Producer" class="form-control" value="@Product.Producer" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-12">
+                                    <label for="Product_Status"></label>
+                                    <input asp-for="Product.Status" class="form-control" value="@Product.Status" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="btn-edit">
+                                        @* <button type="submit" asp-page-handler="Update" class="btn btn-primary" id="savebtn" style="display:none" > Save</button>
+                            <button type="button" id="editbtn" onclick="enableRowEditing(this)" class="btn btn-primary">Edit</button>
+                            <button type="submit" asp-page-handler="Remove" class="btn btn-primary">Delete</button> *@
+
+                                    <button type="submit" asp-page-handler="Update" class="btn btn-primary" id="savebtn_@Product.ProductId" style="display:none" onclick="return confirmSave()">Save</button>
+                                    <button type="button" id="editbtn" onclick="enableRowEditing(this, @Product.ProductId)" class="btn btn-primary">Edit</button>
+                                    <button type="submit" asp-page-handler="Remove" class="btn btn-primary" onclick="return confirmDelete()">Delete</button>
+                                </div>
+                            </td>
+
+                            </form>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        @* <nav aria-label="Page navigation">
+        <ul class="pagination">
+        <li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")">
+        <a class="page-link" asp-page="./Product" asp-route-PageNumber="@(Model.PageNumber - 1)" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        </a>
+        </li>
+        @for (var i = 1; i <= Model.TotalPages; i++)
+        {
+        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+        <a class="page-link" asp-page="./Product" asp-route-PageNumber="@i">@i</a>
+        </li>
+        }
+        <li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
+        <a class="page-link" asp-page="./Product" asp-route-PageNumber="@(Model.PageNumber + 1)" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        </a>
+        </li>
+        </ul>
+        </nav> *@
+
+
+    </div>
+</div>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-end">
+        <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+            <a class="page-link" asp-page="./Product" asp-route-currentPage="@(Model.CurrentPage - 1)" asp-route-searchProduct="@Model.searchProduct" asp-route-searchCategory="@Model.searchCategory" asp-route-searchDiscount="@Model.searchDiscount">&laquo;</a>
+        </li>
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a class="page-link " asp-page="./Product" asp-route-currentPage="@i" asp-route-searchProduct="@Model.searchProduct" asp-route-searchCategory="@Model.searchCategory" asp-route-searchDiscount="@Model.searchDiscount">@i</a>
+            </li>
+        }
+        <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+            <a class="page-link" asp-page="./Product" asp-route-currentPage="@(Model.CurrentPage + 1)" asp-route-searchProduct="@Model.searchProduct" asp-route-searchCategory="@Model.searchCategory" asp-route-searchDiscount="@Model.searchDiscount">&raquo;</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="modal fade" id="ProductModal" tabindex="-1" aria-labelledby="ProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="Form" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ProductModalLabel">Product Transaction</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="ProductModalContent"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="Product_Name">Name</label>
+                                    <input asp-for="Product.Name" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Product_CategoryId"></label>
+                                    <select id="categorySelect+add" class="form-control" asp-items="ViewBag.Categories" onchange="updateCategoryValue('add')">
+                                        <option value="" selected disabled hidden>Choose here</option>
+                                        @if (Categories.Count > 0)
+                                        {
+                                            foreach (var Category in Categories)
+                                            {
+                                                <option id="@Category.CategoryId">@Category.CategoryName</option>
+                                            }
+                                        }
+                                    </select>
+                                    <input style="display: none" id="categoryIdInput+add" asp-for="Product.CategoryId" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="Product_DiscountId"></label>
+                                    <select id="discountSelect+add" class="form-control" asp-items="ViewBag.Discount" onchange="updateDiscountValue('add')">
+                                        <option value="" selected disabled hidden>Choose here</option>
+                                        @if (Discounts.Count > 0)
+                                        {
+                                            foreach (var Discount in Discounts)
+                                            {
+                                                <option id="@Discount.DiscountId">@Discount.DiscountPercent</option>
+
+                                            }
+                                        }
+                                    </select>
+                                    <input style="display: none" id="discountIdInput+add" asp-for="Product.DiscountId" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Product_Description">Description</label>
+                                    <input asp-for="Product.Description" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="Product_Price">Price</label>
+                                    <input asp-for="Product.Price" type="number" class="form-control" step="0.01" oninput="checkDecimal(this)" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Product_Quantity">Quantity</label>
+                                    <input asp-for="Product.Quantity" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="Product_Brand">Brand</label>
+                                    <input asp-for="Product.Brand" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Product_Origin">Origin</label>
+                                    <input asp-for="Product.Origin" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="Product_Weight">Weight</label>
+                                    <input asp-for="Product.Weight" type="number" step="0.01" oninput="checkDecimal(this)" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Product_DateOfManufacture">Date of Manufacture</label>
+                                    <input asp-for="Product.DateOfManufacture" class="form-control" type="date" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="Product_ExpirationDate">Expiration Date</label>
+                                    <input asp-for="Product.ExpirationDate" class="form-control" type="date" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Product_Warning">Warning</label>
+                                    <input asp-for="Product.Warning" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="Product_Producer">Producer</label>
+                                    <input asp-for="Product.Producer" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Product_Status">Status</label>
+                                    <input asp-for="Product.Status" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label>@Message</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btSave" type="submit" asp-page-handler="Add" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="MessageModal" tabindex="-1" aria-labelledby="MessageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="MessageModalLabel">@Message</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-custom" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function confirmSave() {
+            return confirm("Are you sure you want to save changes?");
+        }
+
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this product?");
+        }
+        function enableRowEditing(button, id) {
+            // Tìm thẻ <tr> chứa nút "Edit" được nhấn
+            const row = button.closest('tr');
+
+            // Bỏ thuộc tính readonly cho tất cả các input trong hàng
+            const inputs = row.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.readOnly = false;
+            });
+
+            // Bỏ thuộc tính disabled cho tất cả các select trong hàng
+            const selects = row.querySelectorAll('select');
+            selects.forEach(select => {
+                select.disabled = false;
+            });
+            var a = document.getElementById('editbtn');
+            var b = document.getElementById('savebtn_' + id);
+            button.style.display = 'none';
+            b.style.display = 'inline-block';
+        }
+        function add() {
+            $('#ProductModal').modal('show');
+        }
+
+        function updateCategoryValue(id) {
+            var select = document.getElementById("categorySelect+" + id);
+            var input = document.getElementById("categoryIdInput+" + id);
+            var selectedValue = select.options[select.selectedIndex].id;
+            input.value = selectedValue;
+        }
+        function updateDiscountValue(id) {
+            var select = document.getElementById("discountSelect+" + id);
+            var input = document.getElementById("discountIdInput+" + id);
+            var selectedValue = select.options[select.selectedIndex].id;
+            input.value = selectedValue;
+        }
+
+        window.onload = function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var searchProduct = urlParams.get('searchProduct');
+            var searchCategory = urlParams.get('searchCategory');
+            var searchDiscount = urlParams.get('searchDiscount');
+
+            if (searchProduct) {
+                document.getElementById("searchProduct").value = searchProduct;
+            }
+            if (searchCategory) {
+                document.getElementById("searchCategory").value = searchCategory;
+            }
+            if (searchDiscount) {
+                document.getElementById("searchDiscount").value = searchDiscount;
+            }
+        };
+        document.addEventListener('DOMContentLoaded', function () {
+            var message = '@Message';
+
+            function messshow() {
+                if (message != "") {
+                    $('#MessageModal').modal('show');
+                }
+            }
+            messshow();
+        });
+        // function searchProducts() {
+        //     var searchTerm = document.getElementById("searchInput").value;
+        //     console.log(searchTerm);
+        //     $.ajax({
+        //         type: "GET",
+        //         url: "/Product?handler=Search",
+        //         data: { searchInput: searchTerm },
+        //         success: function (data) {
+        //             displayProducts(data);
+        //         },
+        //         error: function () {
+        //             alert('Error occurred while searching products.');
+        //         }
+        //     });
+        // }
+        function searchProducts() {
+            var searchProduct = document.getElementById("searchProduct").value;
+            var searchCategory = document.getElementById("searchCategory").value;
+            var searchDiscount = document.getElementById("searchDiscount").value;
+            window.location.href = "/Product?searchProduct=" + searchProduct + "&searchCategory=" + searchCategory + "&searchDiscount=" + searchDiscount;
+            console.log(window.location.href);
+        }
+        function checkDecimal(input) {
+            if (isNaN(input.value) || parseFloat(input.value) != input.value) {
+                document.getElementById('error-msg').style.display = 'inline';
+                input.value = '';
+            } else {
+                document.getElementById('error-msg').style.display = 'none';
+            }
+        }
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+
+}
+
+
+

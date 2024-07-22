@@ -23,6 +23,10 @@ public partial class Order
 
     public string NameReceiver { get; set; }
 
+    public DateTime? DateCreate { get; set; }
+
+    public DateTime? DateUpdate { get; set; }
+
     public virtual Customer Customer { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();

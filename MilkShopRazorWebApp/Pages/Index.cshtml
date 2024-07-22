@@ -1,10 +1,36 @@
-﻿@page
+﻿@page "/Index"
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://ttol.vietnamnetjsc.vn/images/2020/11/18/22/35/thai-nhi-5.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+        }
+
+        .text-center {
+            background: rgba(0, 0, 0, 0.5); /* Để văn bản dễ đọc hơn */
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 10%;
+        }
+
+        a {
+            color: lightblue;
+        }
+    </style>
+</head>
+</html>
