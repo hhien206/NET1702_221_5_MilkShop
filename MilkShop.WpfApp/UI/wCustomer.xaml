@@ -9,9 +9,14 @@
     <Grid>
         <StackPanel Orientation="Vertical">
             <GroupBox Header="Category Form" Margin="10">
-                <Grid Height="50">
+                <Grid Height="150">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80"/>
@@ -24,14 +29,42 @@
                         <ColumnDefinition Width="200"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Grid.Row="0" Content="AccountId" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
-                    <TextBox Grid.Column="1" Grid.Row="0" x:Name="txtAccountId" Height="25" Text="{Binding Path=Customer.AccountId, Mode=TwoWay}"  Margin="5"  Width="180" HorizontalAlignment="Left"/>
-                    <Label Grid.Column="2" Grid.Row="0" Content="Name" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
-                    <TextBox Grid.Row="0" Grid.Column="3" x:Name="txtCustomerName" Height="25" Text="{Binding Path=Customer.CustomerName, Mode=TwoWay}"  Margin="5"  Width="180" HorizontalAlignment="Left"/>
-                    <Label Grid.Column="4" Grid.Row="0" Content="Email" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
-                    <TextBox Grid.Column="5" Grid.Row="0" x:Name="txtEmail" Height="25" Text="{Binding Path=Customer.Email, Mode=TwoWay}"  Margin="5"  Width="180" HorizontalAlignment="Left"/>
+
+                    
+
+                    <Label Grid.Column="0" Grid.Row="0" Content="CustomerId" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="1" Grid.Row="0" x:Name="txtCustomerId" Height="25" Text="{Binding Path=Customer.CustomerId, Mode=TwoWay}" Margin="5" Width="180" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Column="2" Grid.Row="0" Content="Name" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="3" Grid.Row="0" x:Name="txtCustomerName" Height="25" Text="{Binding Path=Customer.Name, Mode=TwoWay}" Margin="5" Width="180" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Column="4" Grid.Row="0" Content="Email" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="5" Grid.Row="0" x:Name="txtEmail" Height="25" Text="{Binding Path=Customer.Email, Mode=TwoWay}" Margin="5" Width="180" HorizontalAlignment="Left"/>
+
+                    <!-- Additional fields -->
+                    <Label Grid.Column="0" Grid.Row="1" Content="AccountId" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="1" Grid.Row="1" x:Name="txtAccountId" Height="25" Text="{Binding Path=Customer.AccountId, Mode=TwoWay}" Margin="5" Width="180" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Column="2" Grid.Row="1" Content="Phone" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="3" Grid.Row="1" x:Name="txtPhoneNumber" Height="25" Text="{Binding Path=Customer.PhoneNumber, Mode=TwoWay}" Margin="5" Width="180" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Column="4" Grid.Row="1" Content="DOB" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                    <DatePicker Grid.Column="5" Grid.Row="1" x:Name="dpDOB" SelectedDate="{Binding Path=Customer.Dob, Mode=TwoWay}" Margin="5" Width="180" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Column="0" Grid.Row="2" Content="Address" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtAddress" Height="25" Text="{Binding Path=Customer.Address, Mode=TwoWay}" Margin="5" Width="180" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Column="2" Grid.Row="2" Content="Point" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="3" Grid.Row="2" x:Name="txtPoint" Height="25" Text="{Binding Path=Customer.Point, Mode=TwoWay}" Margin="5" Width="180" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Column="4" Grid.Row="2" Content="Status" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                    <ComboBox Grid.Column="5" Grid.Row="2" x:Name="cbStatus" SelectedItem="{Binding Path=Customer.Status, Mode=TwoWay}" Margin="5" Width="180" HorizontalAlignment="Left">
+                        <ComboBoxItem Content="Active"/>
+                        <ComboBoxItem Content="Inactive"/>
+                    </ComboBox>
                 </Grid>
             </GroupBox>
+
             <StackPanel Height="40" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="ButtonSave" Content="Save" Height="30" Width="80" Click="ButtonSave_Click"/>
                 <Button x:Name="ButtonCancel" Content="Cancel" Height="30" Width="80" Click="ButtonCancel_Click"/>
@@ -39,7 +72,7 @@
             <StackPanel Height="210">
                 <DataGrid x:Name="grdCustomer" AutoGenerateColumns="False" ItemsSource="{Binding Customers}" CanUserAddRows="False" Height="200" Margin="10" MouseDoubleClick="grdCustomer_MouseDouble_Click" SelectionMode="Single" SelectionUnit="FullRow" SelectionChanged="grdCustomer_SelectionChanged">
                     <DataGrid.Columns>
-                        <!--<DataGridTextColumn Header="Code" Binding="{Binding Path=Id}" Visibility="Hidden"/>-->
+                        
                         <DataGridTextColumn Header="CustomerId" Binding="{Binding Path=CustomerId}" Width="50"  IsReadOnly="True"/>
                         <DataGridTextColumn Header="AccountId" Binding="{Binding Path=AccountId}" Width="50"  IsReadOnly="True"/>
                         <DataGridTextColumn Header="CustomerName" Binding="{Binding Path=Name}" Width="50"  IsReadOnly="True"/>
@@ -47,7 +80,6 @@
                         <DataGridTextColumn Header="Address" Binding="{Binding Path=Address}" Width="50"  IsReadOnly="True"/>
                         <DataGridTextColumn Header="Phone" Binding="{Binding Path=PhoneNumber}" Width="50"  IsReadOnly="True"/>
                         <DataGridTextColumn Header="Birthday" Binding="{Binding Path=Dob}" Width="50"  IsReadOnly="True"/>
-                        <DataGridTextColumn Header="Gender" Binding="{Binding Path=Gender}" Width="50"  IsReadOnly="True"/>
                         <DataGridTextColumn Header="Point" Binding="{Binding Path=Point}" Width="50"  IsReadOnly="True"/>
                         <DataGridTextColumn Header="Status" Binding="{Binding Path=Status}" Width="50"  IsReadOnly="True"/>
 
