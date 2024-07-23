@@ -1,5 +1,6 @@
 ﻿using MilkShopData.Base;
 using MilkShopData.Models;
+using MilkShopData.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,11 @@ namespace MilkShopData.Repository
                 return;
             }
             orderDetail.Total = orderDetail.UnitPrice * orderDetail.Quantity;
+        }
+        public async Task<OrderDetail?> CheckOrderDetail(OrderDetailToAdd orderDetail)
+        {
+            var listOrderDetail = await GetAllAsync();
+            return listOrderDetail.FirstOrDefault(l => l.OrderId == orderDetail.OrderId && l.ProductId == orderDetail.ProductId && l.UnitPrice == orderDetail.UnitPrice);
         }
     }
 }

@@ -47,15 +47,27 @@ namespace MilkShopBusiness.Business
         {
             try
             {
-                OrderDetail ordDetail = new OrderDetail
+                var orDetail = await _unitOfWork.OrderDetailRepository.CheckOrderDetail(key);
+                if (orDetail == null)
                 {
-                    OrderId = key.OrderId,
-                    ProductId = key.ProductId,
-                    UnitPrice = key.UnitPrice,
-                    Quantity = key.Quantity,
-                };
-                await _unitOfWork.OrderDetailRepository.CalculateTotal(ordDetail);
-                await _unitOfWork.OrderDetailRepository.CreateAsync(ordDetail);
+                    OrderDetail ordDetail = new OrderDetail
+                    {
+                        OrderId = key.OrderId,
+                        ProductId = key.ProductId,
+                        UnitPrice = key.UnitPrice,
+                        Quantity = key.Quantity,
+                    };
+                    await _unitOfWork.OrderDetailRepository.CalculateTotal(ordDetail);
+                    await _unitOfWork.OrderDetailRepository.CreateAsync(ordDetail);
+                }
+                else
+                {
+                    orDetail.Quantity += key.Quantity;
+                    await _unitOfWork.OrderDetailRepository.CalculateTotal(orDetail);
+                    await _unitOfWork.OrderDetailRepository.UpdateAsync(orDetail);
+                }
+
+
                 List<OrderDetail> ordDetailList = (await _unitOfWork.OrderDetailRepository.GetAllAsync()).FindAll(l => l.OrderId == key.OrderId);
                 await _unitOfWork.OrderRepository.CalculatorTotalAmountAndPrice((int)key.OrderId, ordDetailList);
                 return new BusinessResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
