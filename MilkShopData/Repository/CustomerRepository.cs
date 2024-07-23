@@ -35,20 +35,16 @@ namespace MilkShopData.Repository
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Customer>> SearchCustomer(string value, int? pageIndex, int pageSize)
+        public async Task<List<Customer>> SearchCustomer(string value1, string value2, string value3, int? pageIndex, int pageSize)
         {
-            value = value.Trim().ToLower();
-            DateOnly dateValue;
-            bool isValidDate = DateOnly.TryParse(value, out dateValue);
+            
 
             var customersQuery = _context.Customers
                                         .OrderByDescending(m => m.CustomerId)
                                         .Where(m =>
-
-                                            m.Name.Contains(value) ||
-                                            m.Email.Contains(value) ||
-                                            m.Address.Contains(value) ||
-                                            m.PhoneNumber.Contains(value));
+                                            (value1 == null || m.Name.Contains(value1.Trim().ToLower())) &&
+                                            (value2 == null || m.Email.Contains(value2.Trim().ToLower())) &&
+                                            (value3 == null || m.Address.Contains(value3.Trim().ToLower())));
 
             var paginatedCustomers = await PaginatedList<Customer>.CreateAsync(customersQuery.AsNoTracking(), pageIndex ?? 1, pageSize);
             return paginatedCustomers;

@@ -15,9 +15,15 @@ public partial class NET1702_PRN221_MilkShopContext : DbContext
     {
     }
    
+    public NET1702_PRN221_MilkShopContext(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer("data source=w4v3\\SQL2019;initial catalog=NET1702_PRN221_MilkShop;user id=sa;password=12345;Integrated Security=True;TrustServerCertificate=True");
+        base.OnConfiguring(optionsBuilder);
+
+    }
+
     public NET1702_PRN221_MilkShopContext()
     {
-
     }
 
     public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>

@@ -1,15 +1,17 @@
-﻿using MilkShopBusiness.Base;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using MilkShopBusiness.Base;
 using MilkShopData.Models;
 using System;
 using System.Collections.Generic; 
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MilkShop.WpfApp.UI
 {
 
-    public partial class wCustomer : Window
+    public partial class wCustomer : System.Windows.Window
     {
         private readonly CustomerBusiness _business;
 
@@ -24,17 +26,23 @@ namespace MilkShop.WpfApp.UI
         {
             try
             {
-                if (int.TryParse(txtAccountId.Text, out int id))
+                if (int.TryParse(txtCustomerId.Text, out int id))
                 {
-                    var item = await _business.GetById(id);
+                    var item = await _business.GetById(id); // Adjust this method as per your business logic
 
                     if (item.Data == null)
                     {
                         var customer = new Customer()
                         {
-                            AccountId = id,
+                            
+                            AccountId = int.Parse(txtAccountId.Text),
                             Name = txtCustomerName.Text,
                             Email = txtEmail.Text,
+                            Address = txtAddress.Text,
+                            PhoneNumber = txtPhoneNumber.Text,
+                            Dob = DateOnly.Parse(dpDOB.Text),
+                            Point = int.Parse(txtPoint.Text),
+                            Status = (cbStatus.SelectedItem as ComboBoxItem)?.Content?.ToString(),
                         };
 
                         var result = await _business.Save(customer);
@@ -43,20 +51,31 @@ namespace MilkShop.WpfApp.UI
                     else
                     {
                         var customer = item.Data as Customer;
+
+                        // Update customer details
+                        customer.CustomerId = id;
+                        customer.AccountId = int.Parse(txtAccountId.Text);
                         customer.Name = txtCustomerName.Text;
                         customer.Email = txtEmail.Text;
+                        customer.Address = txtAddress.Text;
+                        customer.PhoneNumber = txtPhoneNumber.Text;
+                        customer.Dob = DateOnly.Parse(dpDOB.Text);
+                        customer.Point = int.Parse(txtPoint.Text);
+                        customer.Status = cbStatus.Text;
+
                         var result = await _business.Update(customer);
                         MessageBox.Show(result.Message, "Update");
                     }
 
-                    txtAccountId.Text = string.Empty;
-                    txtCustomerName.Text = string.Empty;
-                    txtEmail.Text = string.Empty;
+                    // Clear input fields after save or update
+                    ClearInputFields();
+
+                    // Refresh the data grid after saving or updating
                     this.LoadGrdCurrencies();
                 }
                 else
                 {
-                    MessageBox.Show("Invalid Customer ID", "Error");
+                    MessageBox.Show("Invalid Account ID", "Error");
                 }
             }
             catch (Exception ex)
@@ -65,9 +84,24 @@ namespace MilkShop.WpfApp.UI
             }
         }
 
+        private void ClearInputFields()
+        {
+            txtCustomerId.Text = string.Empty;
+            txtAccountId.Text = string.Empty;
+            txtCustomerName.Text = string.Empty;
+            txtEmail.Text = string.Empty;
+            txtAddress.Text = string.Empty;
+            txtPhoneNumber.Text = string.Empty;
+            dpDOB.Text = string.Empty;
+            txtPoint.Text = string.Empty;
+            cbStatus.SelectedIndex = 0;
+        }
+
+
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
             // Add your cancel logic here
+            ClearInputFields();
             MessageBox.Show("Cancel button clicked");
         }
 
@@ -88,9 +122,16 @@ namespace MilkShop.WpfApp.UI
                         if (currencyResult.Status > 0 && currencyResult.Data != null)
                         {
                             item = currencyResult.Data as Customer;
+                            txtCustomerId.Text = item.CustomerId.ToString(); // Convert int to string
                             txtAccountId.Text = item.AccountId.ToString(); // Convert int to string
                             txtCustomerName.Text = item.Name;
                             txtEmail.Text = item.Email;
+                            txtAddress.Text = item.Address;
+                            txtPhoneNumber.Text = item.PhoneNumber;
+                            dpDOB.Text = item.Dob.ToString();
+                            txtPoint.Text = item.Point.ToString();
+                            cbStatus.Text = item.Status;
+
                         }
                     }
                 }
@@ -99,22 +140,27 @@ namespace MilkShop.WpfApp.UI
 
         private async void grdCustomer_ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            Button btn = (Button)sender;
+            System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
 
-            string customerIdString = btn.CommandParameter.ToString();
-
-            if (int.TryParse(customerIdString, out int customerId))
+            // Attempt to convert CommandParameter to int
+            int? customerId;
+            if (btn.CommandParameter != null && int.TryParse(btn.CommandParameter.ToString(), out int value))
             {
-                if (MessageBox.Show("Do you want to delete this item?", "Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    var result = await _business.DeleteById(customerId);
-                    MessageBox.Show($"{result.Message}", "Delete");
-                    this.LoadGrdCurrencies();
-                }
+                customerId = value;
             }
             else
             {
-                MessageBox.Show("Invalid Customer ID.", "Error");
+                // Handle the case where CommandParameter is not an integer or null
+                MessageBox.Show("Invalid Customer ID format. Please try again.", "Error", MessageBoxButton.OK);
+                return;
+            }
+
+            // Confirmation and deletion logic (assuming InternId is valid)
+            if (MessageBox.Show("Do you want to delete this item?", "Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                var result = await _business.DeleteById(customerId.Value);
+                MessageBox.Show($"{result.Message}", "Delete");
+                LoadGrdCurrencies();
             }
         }
 
@@ -142,5 +188,7 @@ namespace MilkShop.WpfApp.UI
         {
 
         }
+
+       
     }
 }
